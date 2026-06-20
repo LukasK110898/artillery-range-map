@@ -8,9 +8,10 @@ The app shows systems from NATO/West, Russia, and Ukraine on a dark map and load
 - Place multiple systems with colored range circles.
 - Ammo and range selection per system.
 - Separate cruise missile class with NATO, Ukraine, and Russia groups.
+- Star marker for systems with especially high reported use or visibility in open-source reporting.
 - Create custom systems with custom ammunition entries.
-- Language switch between English and German in the settings panel.
-- Footer note with project credit, DeepState note, and the author line "Tool by Lukas Knorr".
+- Top-right language toggle between English and German.
+- Footer note with data attribution and the author line "Tool by Lukas Knorr".
 
 ## Run Locally
 This is a static web app. Because it loads external data, use a local server:
@@ -23,8 +24,9 @@ Open `http://localhost:8000` in your browser.
 
 ## Usage
 - Open the settings panel with the menu button in the top left.
-- Switch the UI language between English and German.
+- Switch the UI language between English and German with the top-right toggle.
 - Select a system from the catalog to place it on the map.
+- Systems marked with `★` are a qualitative high-use/high-visibility marker based on open-source reporting, not a statistical ranking.
 - Drag markers to reposition them; range and ammo can be adjusted per entry.
 - The front layer loads live GeoJSON data when the source is reachable.
 
@@ -56,9 +58,10 @@ Die App zeigt Systeme aus NATO/Westen, Russland und Ukraine auf einer dunklen Ka
 - Mehrere Systeme mit farbigen Reichweitenkreisen platzieren.
 - Munition und Reichweite pro System auswaehlen.
 - Separate Marschflugkoerper-Klasse mit Gruppen fuer NATO, Ukraine und Russland.
+- Sternmarkierung fuer Systeme mit besonders haeufig berichteter Nutzung oder hoher Sichtbarkeit in offenen Berichten.
 - Eigene Systeme mit benutzerdefinierten Munitionseintraegen anlegen.
-- Sprachumschaltung zwischen Deutsch und Englisch im Einstellungsbereich.
-- Footer-Hinweis mit Projektvermerk, DeepState-Hinweis und der Autorenzeile "Tool by Lukas Knorr".
+- Sprachumschaltung zwischen Deutsch und Englisch ueber den Schalter oben rechts.
+- Footer-Hinweis mit Datenquellenvermerk und der Autorenzeile "Tool by Lukas Knorr".
 
 ## Lokal starten
 Das Projekt ist eine statische Webanwendung. Wegen der externen Datenquellen ist ein lokaler Server sinnvoll:
@@ -71,8 +74,9 @@ Anschliessend `http://localhost:8000` im Browser oeffnen.
 
 ## Bedienung
 - Ueber den Menue-Button oben links oeffnest du das Einstellungs-Panel.
-- Dort kannst du die Sprache zwischen Deutsch und Englisch wechseln.
+- Die Sprache wechselst du ueber den Schalter oben rechts.
 - Systeme lassen sich ueber die Katalog-Auswahl auf der Karte platzieren.
+- Mit `★` markierte Systeme sind qualitativ als haeufig berichtet bzw. besonders sichtbar markiert, nicht als statistisches Ranking.
 - Der Marker ist verschiebbar; Reichweite und Munition koennen pro Eintrag angepasst werden.
 - Die Front-Ebene laedt aktuelle GeoJSON-Daten nach, sofern die Quelle erreichbar ist.
 

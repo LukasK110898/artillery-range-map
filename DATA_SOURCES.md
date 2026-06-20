@@ -49,6 +49,18 @@ Main public references used for the cruise missile class:
 - TAURUS KEPD 350: https://www.mbda-systems.com/products/deep-strike/taurus
 - R-360 Neptune / Long Neptune, Palianytsia, and Peklo: public Ukrainian and open-source reporting. Values are especially approximate for newer Ukrainian systems.
 
+## Star Marker
+
+Systems marked with `★` are a qualitative high-use / high-visibility signal. They are not a precise statistical ranking. The marker is based on repeated appearance in open-source reporting, public equipment inventories, aid reporting, and visually documented wartime use or losses.
+
+General references used for this qualitative marker include:
+
+- RUSI, "Preliminary Lessons in Conventional Warfighting from Russia's Invasion of Ukraine: February-July 2022": https://www.rusi.org/explore-our-research/publications/special-resources/preliminary-lessons-conventional-warfighting-russias-invasion-ukraine-february-july-2022
+- Oryx documented equipment losses, Russia: https://www.oryxspioenkop.com/2022/02/attack-on-europe-documenting-equipment.html
+- Oryx documented equipment losses, Ukraine: https://www.oryxspioenkop.com/2022/02/attack-on-europe-documenting-ukrainian.html
+- IISS Military Balance publication series: https://www.iiss.org/publications/the-military-balance/
+- Public government aid announcements for Western-supplied systems such as M777 and HIMARS.
+
 ## Disclaimer
 
 The app is intended for information, teaching, and OSINT-oriented visualization. It does not provide target selection, firing solutions, unit locations, or operational advice.

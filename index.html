@@ -10,6 +10,10 @@
 <body>
 <div id="map"></div>
 <button id="toggle" aria-label="Menue">MENU</button>
+<div class="lang-toggle" id="langToggle" aria-label="Language">
+  <button type="button" data-lang="de">DE</button>
+  <button type="button" data-lang="en">EN</button>
+</div>
 <div class="hint" id="hint"></div>
 
 <div id="panel">
@@ -18,14 +22,6 @@
     <button class="close" id="closeBtn">X</button>
   </div>
   <div class="body">
-
-    <div class="section-label">Sprache</div>
-    <div class="lang-row">
-      <select id="langSelect" aria-label="Sprache">
-        <option value="de">Deutsch</option>
-        <option value="en">English</option>
-      </select>
-    </div>
 
     <div class="section-label">Karten-Ebenen</div>
     <label class="switch"><input type="checkbox" id="frontToggle" checked><span>Besetztes Gebiet / Frontlinie</span></label>

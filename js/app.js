@@ -17,11 +17,11 @@ const CATALOG = [
       {name:'Base Bleed', range:40},{name:'V-LAP (RAP)', range:50},{name:'Excalibur (gelenkt)', range:50} ]},
   { key:'zuzana2', group:'NATO / Westen', name:'Zuzana 2 (SK)', cal:'155 mm / L52', ammo:[
       {name:'Standard-HE', range:40},{name:'Extended-Range', range:50} ]},
-  { key:'m777', group:'NATO / Westen', name:'M777', cal:'155 mm / L39 · gezogen', ammo:[
+  { key:'m777', group:'NATO / Westen', topUsed:true, name:'M777', cal:'155 mm / L39 · gezogen', ammo:[
       {name:'Standard-HE (Ladung 5)', range:24},{name:'RAP', range:30},{name:'Excalibur (gelenkt)', range:40},{name:'Vulcano (beworben)', range:60} ]},
   { key:'m109a7', group:'NATO / Westen', name:'M109A7 Paladin', cal:'155 mm / L39', ammo:[
       {name:'Standard-HE', range:24},{name:'RAP', range:30},{name:'Excalibur (gelenkt)', range:40} ]},
-  { key:'himars', group:'NATO / Westen', name:'M142 HIMARS', cal:'227 mm Raketenwerfer', ammo:[
+  { key:'himars', group:'NATO / Westen', topUsed:true, name:'M142 HIMARS', cal:'227 mm Raketenwerfer', ammo:[
       {name:'GMLRS (gelenkt)', range:84},{name:'ER-GMLRS', range:150},{name:'ATACMS (takt. Rakete)', range:300} ]},
   // ---------- Marschflugkörper / NATO ----------
   { key:'tomahawk', group:'Marschflugkörper / NATO', classKey:'cruiseMissile', name:'Tomahawk (RGM/UGM-109)', cal:'See-/U-Boot-gestützter Marschflugkörper', ammo:[
@@ -33,17 +33,17 @@ const CATALOG = [
   { key:'taurus', group:'Marschflugkörper / NATO', classKey:'cruiseMissile', name:'TAURUS KEPD 350', cal:'Luftgestützter Marschflugkörper', ammo:[
       {name:'KEPD 350', range:500} ]},
   // ---------- Russland ----------
-  { key:'msta', group:'Russland', name:'2S19 Msta-S', cal:'152 mm / L47', ammo:[
+  { key:'msta', group:'Russland', topUsed:true, name:'2S19 Msta-S', cal:'152 mm / L47', ammo:[
       {name:'Standard-HE', range:25},{name:'Base Bleed (OF-61)', range:29},{name:'RAP (raketenunterstützt)', range:40},{name:'Krasnopol (gelenkt)', range:20} ]},
   { key:'koalitsiya', group:'Russland', name:'2S35 Koalitsiya-SV', cal:'152 mm · neu', ammo:[
       {name:'Standard-HE', range:30},{name:'RAP', range:45},{name:'Präzisionsmunition (beansprucht)', range:70} ]},
   { key:'giatsint', group:'Russland', name:'2S5 Giatsint-S', cal:'152 mm', ammo:[
       {name:'Standard-HE', range:28},{name:'RAP', range:33} ]},
-  { key:'akatsiya', group:'Russland', name:'2S3 Akatsiya', cal:'152 mm', ammo:[
+  { key:'akatsiya', group:'Russland', topUsed:true, name:'2S3 Akatsiya', cal:'152 mm', ammo:[
       {name:'Standard-HE', range:18},{name:'RAP', range:24} ]},
   { key:'pion', group:'Russland', name:'2S7 Pion / Malka', cal:'203 mm', ammo:[
       {name:'Standard-HE', range:37},{name:'RAP', range:47} ]},
-  { key:'grad', group:'Russland', name:'BM-21 Grad', cal:'122 mm Raketenwerfer', ammo:[
+  { key:'grad', group:'Russland', topUsed:true, name:'BM-21 Grad', cal:'122 mm Raketenwerfer', ammo:[
       {name:'Standard-Rakete', range:20},{name:'Extended-Range-Rakete', range:40} ]},
   { key:'smerch', group:'Russland', name:'BM-30 Smerch', cal:'300 mm Raketenwerfer', ammo:[
       {name:'Standard-Rakete', range:70},{name:'Extended-Range', range:90} ]},
@@ -55,11 +55,11 @@ const CATALOG = [
   { key:'kh101', group:'Marschflugkörper / Russland', classKey:'cruiseMissile', name:'Kh-101 / Kh-102', cal:'Luftgestützter Marschflugkörper', ammo:[
       {name:'Kh-101 (konventionell)', range:2500},{name:'Kh-101/102 (oberer Referenzwert)', range:2800} ]},
   // ---------- Ukraine ----------
-  { key:'bohdana', group:'Ukraine', name:'2S22 Bohdana', cal:'155 mm / L52 · inländisch', ammo:[
+  { key:'bohdana', group:'Ukraine', topUsed:true, name:'2S22 Bohdana', cal:'155 mm / L52 · inländisch', ammo:[
       {name:'Standard-HE', range:42},{name:'RAP (raketenunterstützt)', range:60},{name:'Excalibur (gelenkt)', range:50} ]},
-  { key:'gvozdika', group:'Ukraine', name:'2S1 Gvozdika', cal:'122 mm', ammo:[
+  { key:'gvozdika', group:'Ukraine', topUsed:true, name:'2S1 Gvozdika', cal:'122 mm', ammo:[
       {name:'Standard-HE', range:15},{name:'RAP', range:21} ]},
-  { key:'d30', group:'Ukraine', name:'D-30 (gezogen)', cal:'122 mm', ammo:[
+  { key:'d30', group:'Ukraine', topUsed:true, name:'D-30 (gezogen)', cal:'122 mm', ammo:[
       {name:'Standard-HE', range:15},{name:'RAP', range:21} ]},
   // ---------- Marschflugkörper / Ukraine ----------
   { key:'neptune', group:'Marschflugkörper / Ukraine', classKey:'cruiseMissile', name:'R-360 Neptune', cal:'Ukrainischer Marschflugkörper', ammo:[
@@ -98,7 +98,7 @@ const I18N = {
     cancel: 'Abbrechen',
     placed: 'Platzierte Systeme',
     empty: 'Noch nichts platziert.<br>Waehle oben ein System und tippe "Setzen".',
-    rangeNote: 'Reichweiten sind veroefentlichte, ungefaehre Hersteller-/Referenzangaben (je nach Munition/Ladung/Systemvariante variabel) - ueber "Benutzerdefiniert" anpassbar. Die Front-Ebene zeigt Flaechenkontrolle aus offener OSINT-Quelle, keine praezisen Truppenpositionen.',
+    rangeNote: 'Reichweiten sind veroefentlichte, ungefaehre Hersteller-/Referenzangaben (je nach Munition/Ladung/Systemvariante variabel) - ueber "Benutzerdefiniert" anpassbar. ★ markiert qualitativ haeufig berichtete bzw. besonders sichtbare Systeme. Die Front-Ebene zeigt Flaechenkontrolle aus offener OSINT-Quelle, keine praezisen Truppenpositionen.',
     footerBuild: 'Kartenkacheln: OpenStreetMap contributors und CARTO.',
     footerDeepState: 'Frontdaten: cyterat/deepstate-map-data (GPL-3.0), abgeleitet aus DeepStateMap.live.',
     footerTool: 'Tool by Lukas Knorr',
@@ -157,7 +157,7 @@ const I18N = {
     cancel: 'Cancel',
     placed: 'Placed systems',
     empty: 'Nothing placed yet.<br>Choose a system above and tap "Add".',
-    rangeNote: 'Ranges are published, approximate manufacturer/reference values (varying by ammunition/charge/system variant) - adjustable via "Custom". The front layer shows area control from an open OSINT source, not precise troop positions.',
+    rangeNote: 'Ranges are published, approximate manufacturer/reference values (varying by ammunition/charge/system variant) - adjustable via "Custom". ★ marks qualitative high-use or high-visibility systems. The front layer shows area control from an open OSINT source, not precise troop positions.',
     footerBuild: 'Map tiles: OpenStreetMap contributors and CARTO.',
     footerDeepState: 'Front data: cyterat/deepstate-map-data (GPL-3.0), derived from DeepStateMap.live.',
     footerTool: 'Tool by Lukas Knorr',
@@ -237,6 +237,7 @@ const panel=$('#panel');
 let labelLayoutRaf=null;
 function t(key){return (I18N[currentLang] && I18N[currentLang][key]) || I18N.de[key] || key;}
 function getGroupLabel(group){return (I18N[currentLang].groupMap && I18N[currentLang].groupMap[group]) || group;}
+function displayName(sys){return (sys.topUsed?'★ ':'')+sys.name;}
 function esc(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function clamp(n,min,max){return Math.max(min,Math.min(max,n));}
 function getLabelScale(){return clamp(0.82,1.34,0.72+map.getZoom()*0.05);}
@@ -255,7 +256,7 @@ function operatorLabel(sys){
 }
 function labelHtml(inst){
   return '<div class="range-label-inner" style="--label-color:'+inst.color+'">'+
-    '<div class="range-label-title">'+esc(inst.sys.name)+'</div>'+
+    '<div class="range-label-title">'+esc(displayName(inst.sys))+'</div>'+
     '<div class="range-label-meta"><span>'+esc(t('operatorLabel'))+'</span><span>'+esc(operatorLabel(inst.sys))+'</span></div>'+
     '<div class="range-label-meta"><span>'+esc(t('maxRangeLabel'))+'</span><span>'+maxRange(inst.sys)+' km</span></div>'+
     '</div>';
@@ -335,26 +336,29 @@ function applyLanguage(lang){
   document.title=copy.pageTitle;
   $('#toggle').setAttribute('aria-label', copy.menuAria);
   $('#closeBtn').textContent='X';
-  $('#langSelect').value=currentLang;
+  document.querySelectorAll('#langToggle button').forEach(btn=>{
+    const active=btn.dataset.lang===currentLang;
+    btn.classList.toggle('active',active);
+    btn.setAttribute('aria-pressed',active?'true':'false');
+  });
   $('#panel .ph h1').textContent=copy.panelTitle;
   $('#panel .ph .sub').textContent=copy.panelSub;
-  document.querySelectorAll('.section-label')[0].textContent=copy.languageLabel;
-  document.querySelectorAll('.section-label')[1].textContent=copy.mapLayers;
+  document.querySelectorAll('.section-label')[0].textContent=copy.mapLayers;
   document.querySelector('#frontToggle + span').textContent=copy.occupiedFront;
   document.querySelector('#adm1Toggle + span').textContent=copy.regions;
   $('#refreshBtn').textContent=copy.refreshFront;
   $('#frontStatus').textContent=copy.loadingFront;
-  document.querySelectorAll('.section-label')[2].textContent=copy.addSystem;
+  document.querySelectorAll('.section-label')[1].textContent=copy.addSystem;
   $('#addBtn').textContent=copy.add;
   $('#newSysBtn').textContent=copy.newSystem;
-  document.querySelectorAll('.section-label')[3].textContent=copy.ownSystem;
+  document.querySelectorAll('.section-label')[2].textContent=copy.ownSystem;
   $('#nsName').placeholder=copy.customName;
   $('#nsCal').placeholder=copy.customCal;
   $('#builder label').textContent=copy.ammoAndRange;
   $('#addAmmoBtn').textContent=copy.addAmmo;
   $('#saveSysBtn').textContent=copy.save;
   $('#cancelSysBtn').textContent=copy.cancel;
-  document.querySelectorAll('.section-label')[4].textContent=copy.placed;
+  document.querySelectorAll('.section-label')[3].textContent=copy.placed;
   $('#rangeNote').textContent=copy.rangeNote;
   $('#implementationNote').textContent=copy.footerBuild;
   $('#deepstateLicenseNote').textContent=copy.footerDeepState;
@@ -372,7 +376,7 @@ function fillCatalog(){
   const translatedOrder=order.map(g=>getGroupLabel(g));
   const keys=[...translatedOrder.filter(k=>groups[k]),...Object.keys(groups).filter(k=>!translatedOrder.includes(k))];
   keys.forEach(g=>{const og=document.createElement('optgroup');og.label=g;
-    groups[g].forEach(s=>{const o=document.createElement('option');o.value=s.key;o.textContent=s.name;og.appendChild(o);});
+    groups[g].forEach(s=>{const o=document.createElement('option');o.value=s.key;o.textContent=displayName(s);og.appendChild(o);});
     sel.appendChild(og);});
 }
 function placeSystem(key){
@@ -398,7 +402,7 @@ function updateInst(i){
   i.circle.setStyle({opacity:i.visible?.9:0,fillOpacity:i.visible?.10:0});
   i.marker.setOpacity(i.visible?1:.25);
   const classLine=i.sys.classKey?t(i.sys.classKey)+'<br>':'';
-  i.marker.bindPopup('<b>'+i.sys.name+'</b><br>'+classLine+currentAmmoName(i)+'<br>'+t('rangeLabel')+': <b>'+r+' km</b>');
+  i.marker.bindPopup('<b>'+displayName(i.sys)+'</b><br>'+classLine+currentAmmoName(i)+'<br>'+t('rangeLabel')+': <b>'+r+' km</b>');
   updateLabel(i);
   scheduleLabelLayout();
 }
@@ -413,7 +417,7 @@ function renderList(){
     opts+='<option value="custom" '+(inst.custom?'selected':'')+'>'+t('customAmmo')+'</option>';
     card.innerHTML=
       '<div class="card-top"><div class="dot" style="background:'+inst.color+';color:'+inst.color+'"></div>'+
-      '<div><div class="card-name">'+inst.sys.name+'</div><div class="card-cal">'+(inst.sys.cal||'')+'</div></div>'+
+      '<div><div class="card-name">'+displayName(inst.sys)+'</div><div class="card-cal">'+(inst.sys.cal||'')+'</div></div>'+
       '<div class="card-actions">'+
       '<button class="iconbtn" data-act="vis">'+(inst.visible?t('hide'):t('vis'))+'</button>'+
       '<button class="iconbtn" data-act="zoom">'+t('zoom')+'</button>'+
@@ -452,7 +456,7 @@ $('#addBtn').onclick=()=>placeSystem($('#catalogSelect').value);
 $('#refreshBtn').onclick=()=>refreshFront();
 $('#frontToggle').onchange=e=>{if(e.target.checked){if(occLayer)occLayer.addTo(map);else refreshFront();}else if(occLayer)map.removeLayer(occLayer);};
 $('#adm1Toggle').onchange=e=>{if(e.target.checked)adm1Layer.addTo(map);else map.removeLayer(adm1Layer);};
-$('#langSelect').onchange=e=>{applyLanguage(e.target.value);fillCatalog();renderList();};
+document.querySelectorAll('#langToggle button').forEach(btn=>btn.onclick=()=>{applyLanguage(btn.dataset.lang);fillCatalog();renderList();});
 map.on('zoomend moveend',scheduleLabelLayout);
 let hintT;function flashHint(m){const h=$('#hint');h.textContent=m;h.classList.add('show');clearTimeout(hintT);hintT=setTimeout(()=>h.classList.remove('show'),2600);}
 
