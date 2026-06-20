@@ -103,6 +103,8 @@ const I18N = {
     footerDeepState: 'Frontdaten: cyterat/deepstate-map-data (GPL-3.0), abgeleitet aus DeepStateMap.live.',
     footerTool: 'Tool by Lukas Knorr',
     cruiseMissile: 'Marschflugkoerper',
+    operatorLabel: 'Nutzer',
+    maxRangeLabel: 'Max RW',
     vis: 'VIS',
     hide: 'HIDE',
     zoom: 'ZOOM',
@@ -118,6 +120,12 @@ const I18N = {
       'Marschflugkörper / Ukraine': 'Marschflugkoerper / Ukraine',
       'Marschflugkörper / Russland': 'Marschflugkoerper / Russland',
       'Eigene Systeme': 'Eigene Systeme'
+    },
+    operatorMap: {
+      nato: 'NATO / Westen',
+      russia: 'Russland',
+      ukraine: 'Ukraine',
+      custom: 'Eigene Systeme'
     },
     setHint: name => '"' + name + '" zum Katalog hinzugefuegt',
     placeHint: name => name + ' gesetzt - Marker zum Verschieben ziehen'
@@ -154,6 +162,8 @@ const I18N = {
     footerDeepState: 'Front data: cyterat/deepstate-map-data (GPL-3.0), derived from DeepStateMap.live.',
     footerTool: 'Tool by Lukas Knorr',
     cruiseMissile: 'Cruise missile',
+    operatorLabel: 'User',
+    maxRangeLabel: 'Max range',
     vis: 'VIS',
     hide: 'HIDE',
     zoom: 'ZOOM',
@@ -169,6 +179,12 @@ const I18N = {
       'Marschflugkörper / Ukraine': 'Cruise missiles / Ukraine',
       'Marschflugkörper / Russland': 'Cruise missiles / Russia',
       'Eigene Systeme': 'Custom Systems'
+    },
+    operatorMap: {
+      nato: 'NATO / West',
+      russia: 'Russia',
+      ukraine: 'Ukraine',
+      custom: 'Custom'
     },
     setHint: name => '"' + name + '" added to catalog',
     placeHint: name => name + ' placed - drag marker to move it'
@@ -218,8 +234,99 @@ async function refreshFront(){
 let placed=[], nextId=1, colorIdx=0, customSystems=[];
 const $=s=>document.querySelector(s);
 const panel=$('#panel');
+let labelLayoutRaf=null;
 function t(key){return (I18N[currentLang] && I18N[currentLang][key]) || I18N.de[key] || key;}
 function getGroupLabel(group){return (I18N[currentLang].groupMap && I18N[currentLang].groupMap[group]) || group;}
+function esc(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function clamp(n,min,max){return Math.max(min,Math.min(max,n));}
+function getLabelScale(){return clamp(0.82,1.34,0.72+map.getZoom()*0.05);}
+function labelSize(){const s=getLabelScale();return {scale:s,w:174*s,h:56*s,offset:16*s};}
+function maxRange(sys){return Math.max(...sys.ammo.map(a=>Number(a.range)||0));}
+function operatorKey(sys){
+  const group=sys.group||'';
+  if(group.includes('NATO')) return 'nato';
+  if(group.includes('Russland')) return 'russia';
+  if(group.includes('Ukraine')) return 'ukraine';
+  return 'custom';
+}
+function operatorLabel(sys){
+  const key=operatorKey(sys);
+  return (I18N[currentLang].operatorMap&&I18N[currentLang].operatorMap[key])||key;
+}
+function labelHtml(inst){
+  return '<div class="range-label-inner" style="--label-color:'+inst.color+'">'+
+    '<div class="range-label-title">'+esc(inst.sys.name)+'</div>'+
+    '<div class="range-label-meta"><span>'+esc(t('operatorLabel'))+'</span><span>'+esc(operatorLabel(inst.sys))+'</span></div>'+
+    '<div class="range-label-meta"><span>'+esc(t('maxRangeLabel'))+'</span><span>'+maxRange(inst.sys)+' km</span></div>'+
+    '</div>';
+}
+function labelTopLeft(p,pos,w,h,o){
+  const map={
+    right:[p.x+o,p.y-h/2],
+    left:[p.x-w-o,p.y-h/2],
+    top:[p.x-w/2,p.y-h-o],
+    bottom:[p.x-w/2,p.y+o],
+    topRight:[p.x+o,p.y-h-o],
+    bottomRight:[p.x+o,p.y+o],
+    topLeft:[p.x-w-o,p.y-h-o],
+    bottomLeft:[p.x-w-o,p.y+o]
+  };
+  return map[pos]||map.right;
+}
+function labelIcon(inst,pos){
+  const {scale,w,h,offset}=labelSize();
+  const topLeft=labelTopLeft({x:0,y:0},pos,w,h,offset);
+  return L.divIcon({
+    className:'range-label-icon',
+    html:labelHtml(inst),
+    iconSize:[w,h],
+    iconAnchor:[-topLeft[0],-topLeft[1]]
+  });
+}
+function updateLabel(inst){
+  if(!inst.labelMarker){
+    inst.labelPos='right';
+    inst.labelMarker=L.marker([inst.lat,inst.lng],{icon:labelIcon(inst,inst.labelPos),interactive:false,keyboard:false,zIndexOffset:450}).addTo(map);
+  }else{
+    inst.labelMarker.setLatLng([inst.lat,inst.lng]);
+    inst.labelMarker.setIcon(labelIcon(inst,inst.labelPos||'right'));
+  }
+  inst.labelMarker.setOpacity(inst.visible?1:0);
+}
+function overlapsAny(bounds,others){return others.some(b=>bounds.intersects(b));}
+function scoreBounds(bounds,others){
+  return others.reduce((sum,b)=>{
+    const x=Math.max(0,Math.min(bounds.max.x,b.max.x)-Math.max(bounds.min.x,b.min.x));
+    const y=Math.max(0,Math.min(bounds.max.y,b.max.y)-Math.max(bounds.min.y,b.min.y));
+    return sum+x*y;
+  },0);
+}
+function layoutLabels(){
+  map.getContainer().style.setProperty('--label-scale',getLabelScale());
+  const {w,h,offset}=labelSize();
+  const occupied=[];
+  const positions=['right','left','top','bottom','topRight','bottomRight','topLeft','bottomLeft'];
+  placed.forEach(inst=>{
+    if(!inst.visible||!inst.labelMarker) return;
+    const p=map.latLngToLayerPoint([inst.lat,inst.lng]);
+    const preferred=[inst.labelPos||'right',...positions.filter(pos=>pos!==inst.labelPos)];
+    let best=preferred[0],bestBounds=null,bestScore=Infinity;
+    for(const pos of preferred){
+      const tl=labelTopLeft(p,pos,w,h,offset);
+      const bounds=L.bounds(L.point(tl[0]-4,tl[1]-4),L.point(tl[0]+w+4,tl[1]+h+4));
+      const score=scoreBounds(bounds,occupied);
+      if(score<bestScore){best=pos;bestBounds=bounds;bestScore=score;}
+      if(!overlapsAny(bounds,occupied)) break;
+    }
+    inst.labelPos=best;
+    inst.labelMarker.setIcon(labelIcon(inst,best));
+    if(bestBounds) occupied.push(bestBounds);
+  });
+}
+function scheduleLabelLayout(){
+  if(labelLayoutRaf) cancelAnimationFrame(labelLayoutRaf);
+  labelLayoutRaf=requestAnimationFrame(()=>{labelLayoutRaf=null;layoutLabels();});
+}
 function applyLanguage(lang){
   currentLang=I18N[lang]?lang:'de';
   localStorage.setItem('arm_lang', currentLang);
@@ -252,6 +359,8 @@ function applyLanguage(lang){
   $('#implementationNote').textContent=copy.footerBuild;
   $('#deepstateLicenseNote').textContent=copy.footerDeepState;
   $('#footerNote div:last-child').textContent=copy.footerTool;
+  placed.forEach(updateInst);
+  scheduleLabelLayout();
 }
 function allSystems(){return [...CATALOG,...customSystems];}
 function findSys(k){return allSystems().find(s=>s.key===k);}
@@ -274,9 +383,9 @@ function placeSystem(key){
   const icon=L.divIcon({className:'',html:'<div class="sys-dot" style="background:'+color+';color:'+color+'"></div>',iconSize:[14,14],iconAnchor:[7,7]});
   const marker=L.marker(c,{icon,draggable:true}).addTo(map);
   const circle=L.circle(c,{radius:sys.ammo[0].range*1000,color,weight:1.5,opacity:.9,fillColor:color,fillOpacity:.10}).addTo(map);
-  const inst={id,key,sys,ammoIdx:0,custom:false,customRange:sys.ammo[0].range,color,marker,circle,lat:c.lat,lng:c.lng,visible:true};
+  const inst={id,key,sys,ammoIdx:0,custom:false,customRange:sys.ammo[0].range,color,marker,circle,lat:c.lat,lng:c.lng,visible:true,labelMarker:null,labelPos:'right'};
   placed.push(inst);
-  marker.on('drag',e=>{const p=e.target.getLatLng();circle.setLatLng(p);inst.lat=p.lat;inst.lng=p.lng;});
+  marker.on('drag',e=>{const p=e.target.getLatLng();circle.setLatLng(p);inst.lat=p.lat;inst.lng=p.lng;if(inst.labelMarker)inst.labelMarker.setLatLng(p);scheduleLabelLayout();});
   marker.on('click',()=>marker.openPopup());
   updateInst(inst); renderList();
   flashHint(t('placeHint')(sys.name));
@@ -290,8 +399,10 @@ function updateInst(i){
   i.marker.setOpacity(i.visible?1:.25);
   const classLine=i.sys.classKey?t(i.sys.classKey)+'<br>':'';
   i.marker.bindPopup('<b>'+i.sys.name+'</b><br>'+classLine+currentAmmoName(i)+'<br>'+t('rangeLabel')+': <b>'+r+' km</b>');
+  updateLabel(i);
+  scheduleLabelLayout();
 }
-function removeInst(id){const k=placed.findIndex(p=>p.id===id);if(k<0)return;map.removeLayer(placed[k].marker);map.removeLayer(placed[k].circle);placed.splice(k,1);renderList();}
+function removeInst(id){const k=placed.findIndex(p=>p.id===id);if(k<0)return;map.removeLayer(placed[k].marker);map.removeLayer(placed[k].circle);if(placed[k].labelMarker)map.removeLayer(placed[k].labelMarker);placed.splice(k,1);renderList();scheduleLabelLayout();}
 function renderList(){
   const list=$('#list'); list.innerHTML='';
   if(!placed.length){list.innerHTML='<div class="empty">'+t('empty')+'</div>';return;}
@@ -312,7 +423,7 @@ function renderList(){
       '<div class="range-pill"><b>'+r+'</b><span>'+t('rangeKm')+'</span></div>';
     card.querySelector('[data-act="del"]').onclick=()=>removeInst(inst.id);
     card.querySelector('[data-act="zoom"]').onclick=()=>{map.setView([inst.lat,inst.lng],8);closePanel();};
-    card.querySelector('[data-act="vis"]').onclick=()=>{inst.visible=!inst.visible;updateInst(inst);renderList();};
+    card.querySelector('[data-act="vis"]').onclick=()=>{inst.visible=!inst.visible;updateInst(inst);renderList();scheduleLabelLayout();};
     card.querySelector('[data-act="ammo"]').onchange=e=>{if(e.target.value==='custom'){inst.custom=true;}else{inst.custom=false;inst.ammoIdx=Number(e.target.value);}updateInst(inst);renderList();};
     const cr=card.querySelector('[data-act="crange"]');
     if(cr)cr.oninput=e=>{inst.customRange=e.target.value;updateInst(inst);card.querySelector('.range-pill b').textContent=currentRange(inst);};
@@ -342,6 +453,7 @@ $('#refreshBtn').onclick=()=>refreshFront();
 $('#frontToggle').onchange=e=>{if(e.target.checked){if(occLayer)occLayer.addTo(map);else refreshFront();}else if(occLayer)map.removeLayer(occLayer);};
 $('#adm1Toggle').onchange=e=>{if(e.target.checked)adm1Layer.addTo(map);else map.removeLayer(adm1Layer);};
 $('#langSelect').onchange=e=>{applyLanguage(e.target.value);fillCatalog();renderList();};
+map.on('zoomend moveend',scheduleLabelLayout);
 let hintT;function flashHint(m){const h=$('#hint');h.textContent=m;h.classList.add('show');clearTimeout(hintT);hintT=setTimeout(()=>h.classList.remove('show'),2600);}
 
 // ====== Start ======
