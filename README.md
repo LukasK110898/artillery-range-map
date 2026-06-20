@@ -1,58 +1,42 @@
 # Artillerie-Reichweitenkarte
 
-Interaktive, dunkle Webkarte zum Vergleich der Reichweiten moderner Artillerie- und
-Raketenwerfer-Systeme (NATO/Westen, Russland, Ukraine) – inklusive einer live geladenen
-Ebene zur Gebietskontrolle im Ukraine-Krieg.
+Interaktive Webkarte zum Vergleichen von Artillerie- und Raketenwerfer-Reichweiten.
+Die Anwendung zeigt Systeme aus NATO/Westen, Russland und Ukraine auf einer dunklen Karte
+und laedt eine Front-Ebene aus einer offenen OSINT-Quelle nach.
 
-## Funktionen
-- Detaillierter dunkler Basemap (Städte, Hauptstraßen, Staats- und Regionsgrenzen).
-- Betonte **Bundesland-/Regionsgrenzen für Europa** als zuschaltbare Ebene.
-- Mehrere Systeme platzieren, Munitionstyp wählen, Reichweiten als Ringe vergleichen.
-- Marker frei verschiebbar; eigene Systeme mit eigenen Munitions-/Reichweitenwerten anlegen.
-- **Frontlinie / besetztes Gebiet** wird beim Laden live aus offener OSINT-Quelle abgerufen.
+## Aktueller Stand
+- Dunkle Leaflet-Karte mit Europa-Regionsgrenzen und zuschaltbarer Front-Ebene.
+- Platzieren mehrerer Systeme mit farbigen Reichweitenkreisen.
+- Auswahlliste fuer Munition und Reichweite je System.
+- Eigene Systeme mit benutzerdefinierten Munitionen anlegen.
+- Sprachumschaltung zwischen Deutsch und Englisch im Einstellungsbereich.
+- Footer mit Projekt-Hinweis, DeepState-Hinweis und Autorenzeile "Tool by Lukas Knorr".
 
-## Lokal ausprobieren
-Wegen der Live-Datenabrufe am besten über einen lokalen Server statt per Doppelklick:
-```
+## Lokal starten
+Das Projekt laeuft als statische Webanwendung. Wegen der externen Datenquellen ist ein lokaler Server sinnvoll:
+
+```bash
 python3 -m http.server 8000
-# dann im Browser: http://localhost:8000
 ```
 
-## Auf GitHub Pages veröffentlichen
-1. Neues, **öffentliches** Repository auf GitHub anlegen.
-2. Alle Dateien dieses Ordners hochladen (Web-Oberfläche: „Add file → Upload files",
-   oder per Git – siehe unten).
-3. Im Repo: **Settings → Pages**.
-4. Unter „Build and deployment → Source" **Deploy from a branch** wählen,
-   Branch `main`, Ordner `/ (root)`, **Save**.
-5. Nach ca. 1 Minute ist die Seite erreichbar unter
-   `https://<DEIN-NUTZERNAME>.github.io/<REPO-NAME>/`.
+Danach im Browser `http://localhost:8000` oeffnen.
 
-Per Git (Alternative):
-```
-git init
-git add .
-git commit -m "Artillerie-Reichweitenkarte"
-git branch -M main
-git remote add origin https://github.com/<NUTZER>/<REPO>.git
-git push -u origin main
-```
+## Bedienung
+- Ueber das Menue oben links oeffnest du das Einstellungs-Panel.
+- Dort kannst du die Sprache zwischen Deutsch und Englisch wechseln.
+- Systeme lassen sich ueber die Katalog-Auswahl auf der Karte platzieren.
+- Der Marker ist verschiebbar; Reichweite und Munition koennen pro Eintrag angepasst werden.
+- Die Front-Ebene laedt aktuelle GeoJSON-Daten nach, sofern die Quelle erreichbar ist.
 
-## Datenquellen & Lizenzen
-- **Kartenkacheln:** © OpenStreetMap-Mitwirkende, © CARTO (CARTO Basemaps, kostenlose Nutzung
-  mit Namensnennung). Bei hoher Last ggf. eigenen Tile-Anbieter/Key verwenden.
-- **Staats-/Regionsgrenzen:** Natural Earth (gemeinfrei / public domain).
-- **Front-/Besetzungsdaten:** live aus dem öffentlichen Repo
-  `cyterat/deepstate-map-data` (abgeleitet aus DeepStateMap). Die Daten werden **nicht**
-  mitgeliefert, sondern zur Laufzeit geladen und der Quelle zugeschrieben. Bitte die
-  Lizenz-/Nutzungsbedingungen der Quelle (DeepStateMap) vor Weiterverwendung prüfen.
-- **Reichweitenangaben der Systeme:** veröffentlichte Hersteller- bzw. Referenzwerte,
-  ungefähr und je nach Munition/Ladung/Bedingungen variabel.
+## Daten und Quellen
+- Kartenkacheln: OpenStreetMap und CARTO.
+- Europa-Regionsgrenzen: Natural Earth.
+- Front-Ebene: DeepStateMap bzw. abgeleitete offene Datenquelle.
+- Die Nutzung von DeepState-Materialien sollte die dort genannte Lizenz oder den Quellenhinweis erfuellen.
+- Reichweitenangaben sind naeherungsweise Referenzwerte und koennen je nach Munition und Ladung variieren.
 
-## Hinweis / Disclaimer
-Dieses Projekt dient der Information, Lehre und OSINT-Analyse. Es zeigt **Flächenkontrolle**
-(besetztes Gebiet, grober Frontverlauf), **keine** präzisen Truppenpositionen oder
-Zielinformationen. Reichweiten sind Näherungswerte aus offenen Quellen.
+## Hinweis
+Das Projekt dient Information und OSINT-Analyse. Es zeigt Flächenkontrolle und grobe Reichweiten, keine praezisen Truppenpositionen.
 
 ## Lizenz
-Eigener Code: MIT (siehe `LICENSE`). Datenquellen unterliegen ihren jeweils eigenen Lizenzen.
+Eigener Code: MIT, siehe [LICENSE](LICENSE).
