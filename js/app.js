@@ -49,6 +49,101 @@ const CATALOG = [
       {name:'Standard-HE', range:15},{name:'RAP', range:21} ]},
 ];
 const PALETTE = ['#38bdf8','#f97316','#a78bfa','#34d399','#f472b6','#facc15','#fb7185','#22d3ee','#c084fc','#4ade80'];
+const I18N = {
+  de: {
+    pageTitle: 'Artillerie-Reichweitenkarte',
+    menuAria: 'Menue',
+    panelTitle: 'Artillerie-Reichweiten',
+    panelSub: 'Reichweiten & Frontlinie · Ukraine-Theater',
+    languageLabel: 'Sprache',
+    mapLayers: 'Karten-Ebenen',
+    occupiedFront: 'Besetztes Gebiet / Frontlinie',
+    regions: 'Bundesland-/Regionsgrenzen (Europa)',
+    refreshFront: 'Frontdaten live aktualisieren',
+    loadingFront: 'Frontdaten werden live geladen ...',
+    frontLoading: 'Lade aktuelle Frontdaten ...',
+    frontOffline: 'Frontdaten derzeit nicht abrufbar (Quelle offline oder Netz blockiert). Erneut versuchen mit "Refresh".',
+    frontLoaded: ds => 'Stand ' + fmtDate(ds) + ' · Quelle: DeepStateMap (OSINT).',
+    addSystem: 'System hinzufuegen',
+    add: 'Setzen',
+    ownSystem: 'Eigenes System',
+    newSystem: '+ Eigenes System anlegen',
+    customName: 'Name (z. B. eigenes System)',
+    customCal: 'Kaliber / Rohr (optional)',
+    ammoAndRange: 'Munition & Reichweite (km)',
+    ammo: 'Munition',
+    addAmmo: '+ Munition',
+    save: 'Speichern',
+    cancel: 'Abbrechen',
+    placed: 'Platzierte Systeme',
+    empty: 'Noch nichts platziert.<br>Waehle oben ein System und tippe "Setzen".',
+    rangeNote: 'Reichweiten sind veroefentlichte, ungefaehre Hersteller-/Referenzangaben (je nach Munition/Ladung variabel) - ueber "Benutzerdefiniert" anpassbar. Die Front-Ebene zeigt die Flaechenkontrolle (besetztes Gebiet) aus offener OSINT-Quelle (DeepStateMap), keine praezisen Truppenpositionen.',
+    footerBuild: 'Umgesetzt mit Claude Opus 4.7.',
+    footerTool: 'Tool by Lukas Knorr',
+    vis: 'VIS',
+    hide: 'HIDE',
+    zoom: 'ZOOM',
+    del: 'DEL',
+    rangeKm: 'km Reichweite',
+    rangeLabel: 'Reichweite',
+    customAmmo: 'Benutzerdefiniert...',
+    groupMap: {
+      'NATO / Westen': 'NATO / Westen',
+      'Russland': 'Russland',
+      'Ukraine': 'Ukraine',
+      'Eigene Systeme': 'Eigene Systeme'
+    },
+    setHint: name => '"' + name + '" zum Katalog hinzugefuegt',
+    placeHint: name => name + ' gesetzt - Marker zum Verschieben ziehen'
+  },
+  en: {
+    pageTitle: 'Artillery Range Map',
+    menuAria: 'Menu',
+    panelTitle: 'Artillery Ranges',
+    panelSub: 'Ranges and front line · Ukraine theater',
+    languageLabel: 'Language',
+    mapLayers: 'Map layers',
+    occupiedFront: 'Occupied area / front line',
+    regions: 'State / region borders (Europe)',
+    refreshFront: 'Refresh front data',
+    loadingFront: 'Front data is loading live ...',
+    frontLoading: 'Loading current front data ...',
+    frontOffline: 'Front data is currently unavailable (source offline or network blocked). Try again with "Refresh".',
+    frontLoaded: ds => 'As of ' + fmtDate(ds) + ' · Source: DeepStateMap (OSINT).',
+    addSystem: 'Add system',
+    add: 'Add',
+    ownSystem: 'Custom system',
+    newSystem: '+ Create custom system',
+    customName: 'Name (e.g. custom system)',
+    customCal: 'Caliber / barrel (optional)',
+    ammoAndRange: 'Ammo and range (km)',
+    ammo: 'Ammo',
+    addAmmo: '+ Ammo',
+    save: 'Save',
+    cancel: 'Cancel',
+    placed: 'Placed systems',
+    empty: 'Nothing placed yet.<br>Choose a system above and tap "Add".',
+    rangeNote: 'Ranges are published, approximate manufacturer/reference values (varying by ammunition/charge) - adjustable via "Custom". The front layer shows area control (occupied territory) from an open OSINT source (DeepStateMap), not precise troop positions.',
+    footerBuild: 'Implemented with Claude Opus 4.7.',
+    footerTool: 'Tool by Lukas Knorr',
+    vis: 'VIS',
+    hide: 'HIDE',
+    zoom: 'ZOOM',
+    del: 'DEL',
+    rangeKm: 'km range',
+    rangeLabel: 'Range',
+    customAmmo: 'Custom...',
+    groupMap: {
+      'NATO / Westen': 'NATO / West',
+      'Russland': 'Russia',
+      'Ukraine': 'Ukraine',
+      'Eigene Systeme': 'Custom Systems'
+    },
+    setHint: name => '"' + name + '" added to catalog',
+    placeHint: name => name + ' placed - drag marker to move it'
+  }
+};
+let currentLang = localStorage.getItem('arm_lang') || 'de';
 
 // ====== Karte mit detailliertem dunklem Basemap (Städte, Straßen, Grenzen) ======
 const map = L.map('map',{zoomControl:true,worldCopyJump:true,minZoom:3,maxZoom:18}).setView([48.4,33],6);
@@ -71,7 +166,7 @@ function setOccupied(gj){
 function pad(n){return String(n).padStart(2,'0');}
 function fmtDate(ds){return ds.slice(6,8)+'.'+ds.slice(4,6)+'.'+ds.slice(0,4);}
 async function refreshFront(){
-  const st=$('#frontStatus'); st.textContent='Lade aktuelle Frontdaten …';
+  const st=$('#frontStatus'); st.textContent=t('frontLoading');
   for(let off=0;off<5;off++){
     const d=new Date(Date.now()-off*864e5);
     const ds=d.getUTCFullYear()+pad(d.getUTCMonth()+1)+pad(d.getUTCDate());
@@ -80,11 +175,11 @@ async function refreshFront(){
       if(!r.ok) continue;
       const gj=await r.json();
       setOccupied(gj);
-      st.textContent='Stand '+fmtDate(ds)+' · Quelle: DeepStateMap (OSINT).';
+      st.textContent=t('frontLoaded')(ds);
       return true;
     }catch(e){}
   }
-  st.textContent='Frontdaten derzeit nicht abrufbar (Quelle offline oder Netz blockiert). Erneut versuchen mit „↻".';
+  st.textContent=t('frontOffline');
   return false;
 }
 
@@ -92,14 +187,49 @@ async function refreshFront(){
 let placed=[], nextId=1, colorIdx=0, customSystems=[];
 const $=s=>document.querySelector(s);
 const panel=$('#panel');
+function t(key){return (I18N[currentLang] && I18N[currentLang][key]) || I18N.de[key] || key;}
+function getGroupLabel(group){return (I18N[currentLang].groupMap && I18N[currentLang].groupMap[group]) || group;}
+function applyLanguage(lang){
+  currentLang=I18N[lang]?lang:'de';
+  localStorage.setItem('arm_lang', currentLang);
+  const copy=I18N[currentLang];
+  document.documentElement.lang=currentLang;
+  document.title=copy.pageTitle;
+  $('#toggle').setAttribute('aria-label', copy.menuAria);
+  $('#closeBtn').textContent='X';
+  $('#langSelect').value=currentLang;
+  $('#panel .ph h1').textContent=copy.panelTitle;
+  $('#panel .ph .sub').textContent=copy.panelSub;
+  document.querySelectorAll('.section-label')[0].textContent=copy.languageLabel;
+  document.querySelectorAll('.section-label')[1].textContent=copy.mapLayers;
+  document.querySelector('#frontToggle + span').textContent=copy.occupiedFront;
+  document.querySelector('#adm1Toggle + span').textContent=copy.regions;
+  $('#refreshBtn').textContent=copy.refreshFront;
+  $('#frontStatus').textContent=copy.loadingFront;
+  document.querySelectorAll('.section-label')[2].textContent=copy.addSystem;
+  $('#addBtn').textContent=copy.add;
+  $('#newSysBtn').textContent=copy.newSystem;
+  document.querySelectorAll('.section-label')[3].textContent=copy.ownSystem;
+  $('#nsName').placeholder=copy.customName;
+  $('#nsCal').placeholder=copy.customCal;
+  $('#builder label').textContent=copy.ammoAndRange;
+  $('#addAmmoBtn').textContent=copy.addAmmo;
+  $('#saveSysBtn').textContent=copy.save;
+  $('#cancelSysBtn').textContent=copy.cancel;
+  document.querySelectorAll('.section-label')[4].textContent=copy.placed;
+  $('#rangeNote').textContent=copy.rangeNote;
+  $('#implementationNote').textContent=copy.footerBuild;
+  $('#footerNote div:last-child').textContent=copy.footerTool;
+}
 function allSystems(){return [...CATALOG,...customSystems];}
 function findSys(k){return allSystems().find(s=>s.key===k);}
 function fillCatalog(){
   const sel=$('#catalogSelect'); sel.innerHTML='';
   const groups={};
-  allSystems().forEach(s=>{const g=s.group||'Eigene Systeme';(groups[g]=groups[g]||[]).push(s);});
+  allSystems().forEach(s=>{const g=getGroupLabel(s.group||'Eigene Systeme');(groups[g]=groups[g]||[]).push(s);});
   const order=['NATO / Westen','Russland','Ukraine','Eigene Systeme'];
-  const keys=[...order.filter(k=>groups[k]),...Object.keys(groups).filter(k=>!order.includes(k))];
+  const translatedOrder=order.map(g=>getGroupLabel(g));
+  const keys=[...translatedOrder.filter(k=>groups[k]),...Object.keys(groups).filter(k=>!translatedOrder.includes(k))];
   keys.forEach(g=>{const og=document.createElement('optgroup');og.label=g;
     groups[g].forEach(s=>{const o=document.createElement('option');o.value=s.key;o.textContent=s.name;og.appendChild(o);});
     sel.appendChild(og);});
@@ -117,36 +247,36 @@ function placeSystem(key){
   marker.on('drag',e=>{const p=e.target.getLatLng();circle.setLatLng(p);inst.lat=p.lat;inst.lng=p.lng;});
   marker.on('click',()=>marker.openPopup());
   updateInst(inst); renderList();
-  flashHint(sys.name+' gesetzt – Marker zum Verschieben ziehen');
+  flashHint(t('placeHint')(sys.name));
 }
 function currentRange(i){return i.custom?(Number(i.customRange)||0):i.sys.ammo[i.ammoIdx].range;}
-function currentAmmoName(i){return i.custom?'Benutzerdefiniert':i.sys.ammo[i.ammoIdx].name;}
+function currentAmmoName(i){return i.custom?t('customAmmo'):i.sys.ammo[i.ammoIdx].name;}
 function updateInst(i){
   const r=currentRange(i);
   i.circle.setRadius(r*1000);
   i.circle.setStyle({opacity:i.visible?.9:0,fillOpacity:i.visible?.10:0});
   i.marker.setOpacity(i.visible?1:.25);
-  i.marker.bindPopup('<b>'+i.sys.name+'</b><br>'+currentAmmoName(i)+'<br>Reichweite: <b>'+r+' km</b>');
+  i.marker.bindPopup('<b>'+i.sys.name+'</b><br>'+currentAmmoName(i)+'<br>'+t('rangeLabel')+': <b>'+r+' km</b>');
 }
 function removeInst(id){const k=placed.findIndex(p=>p.id===id);if(k<0)return;map.removeLayer(placed[k].marker);map.removeLayer(placed[k].circle);placed.splice(k,1);renderList();}
 function renderList(){
   const list=$('#list'); list.innerHTML='';
-  if(!placed.length){list.innerHTML='<div class="empty">Noch nichts platziert.<br>Wähle oben ein System und tippe „Setzen".</div>';return;}
+  if(!placed.length){list.innerHTML='<div class="empty">'+t('empty')+'</div>';return;}
   placed.forEach(inst=>{
     const card=document.createElement('div'); card.className='card';
     const r=currentRange(inst);
-    let opts=inst.sys.ammo.map((a,idx)=>'<option value="'+idx+'" '+((!inst.custom&&idx===inst.ammoIdx)?'selected':'')+'>'+a.name+' – '+a.range+' km</option>').join('');
-    opts+='<option value="custom" '+(inst.custom?'selected':'')+'>Benutzerdefiniert…</option>';
+    let opts=inst.sys.ammo.map((a,idx)=>'<option value="'+idx+'" '+((!inst.custom&&idx===inst.ammoIdx)?'selected':'')+'>'+a.name+' - '+a.range+' km</option>').join('');
+    opts+='<option value="custom" '+(inst.custom?'selected':'')+'>'+t('customAmmo')+'</option>';
     card.innerHTML=
       '<div class="card-top"><div class="dot" style="background:'+inst.color+';color:'+inst.color+'"></div>'+
       '<div><div class="card-name">'+inst.sys.name+'</div><div class="card-cal">'+(inst.sys.cal||'')+'</div></div>'+
       '<div class="card-actions">'+
-      '<button class="iconbtn" data-act="vis">'+(inst.visible?'👁':'🚫')+'</button>'+
-      '<button class="iconbtn" data-act="zoom">🎯</button>'+
-      '<button class="iconbtn" data-act="del">🗑</button></div></div>'+
-      '<label>Munition</label><select data-act="ammo">'+opts+'</select>'+
+      '<button class="iconbtn" data-act="vis">'+(inst.visible?t('hide'):t('vis'))+'</button>'+
+      '<button class="iconbtn" data-act="zoom">'+t('zoom')+'</button>'+
+      '<button class="iconbtn" data-act="del">'+t('del')+'</button></div></div>'+
+      '<label>'+t('ammo')+'</label><select data-act="ammo">'+opts+'</select>'+
       '<div class="custom-range '+(inst.custom?'show':'')+'"><input type="number" min="0" step="1" value="'+inst.customRange+'" data-act="crange"><span style="font-size:12px;color:var(--muted)">km</span></div>'+
-      '<div class="range-pill"><b>'+r+'</b><span>km Reichweite</span></div>';
+      '<div class="range-pill"><b>'+r+'</b><span>'+t('rangeKm')+'</span></div>';
     card.querySelector('[data-act="del"]').onclick=()=>removeInst(inst.id);
     card.querySelector('[data-act="zoom"]').onclick=()=>{map.setView([inst.lat,inst.lng],8);closePanel();};
     card.querySelector('[data-act="vis"]').onclick=()=>{inst.visible=!inst.visible;updateInst(inst);renderList();};
@@ -157,7 +287,7 @@ function renderList(){
   });
 }
 function addAmmoRow(name,range){name=name||'';range=range||'';const row=document.createElement('div');row.className='ammo-row';
-  row.innerHTML='<input class="n" placeholder="Munition" value="'+name+'"><input class="r" type="number" min="0" placeholder="km" value="'+range+'"><button class="iconbtn rm-ammo">✕</button>';
+  row.innerHTML='<input class="n" placeholder="'+t('ammo')+'" value="'+name+'"><input class="r" type="number" min="0" placeholder="km" value="'+range+'"><button class="iconbtn rm-ammo">X</button>';
   row.querySelector('.rm-ammo').onclick=()=>row.remove();$('#ammoRows').appendChild(row);}
 function resetBuilder(){$('#nsName').value='';$('#nsCal').value='';$('#ammoRows').innerHTML='';addAmmoRow('Standard-HE','');}
 $('#newSysBtn').onclick=()=>{const b=$('#builder');b.classList.toggle('show');if(b.classList.contains('show')&&!$('#ammoRows').children.length)resetBuilder();};
@@ -169,7 +299,7 @@ $('#saveSysBtn').onclick=()=>{
   if(!ammo.length){alert('Bitte mindestens eine Munition mit Reichweite > 0.');return;}
   const sys={key:'custom_'+Date.now(),name,cal:$('#nsCal').value.trim()||'benutzerdefiniert',ammo};
   customSystems.push(sys);fillCatalog();$('#catalogSelect').value=sys.key;$('#builder').classList.remove('show');resetBuilder();
-  flashHint('„'+name+'" zum Katalog hinzugefügt');
+  flashHint(t('setHint')(name));
 };
 function openPanel(){panel.classList.add('open');}
 function closePanel(){panel.classList.remove('open');}
@@ -178,9 +308,11 @@ $('#addBtn').onclick=()=>placeSystem($('#catalogSelect').value);
 $('#refreshBtn').onclick=()=>refreshFront();
 $('#frontToggle').onchange=e=>{if(e.target.checked){if(occLayer)occLayer.addTo(map);else refreshFront();}else if(occLayer)map.removeLayer(occLayer);};
 $('#adm1Toggle').onchange=e=>{if(e.target.checked)adm1Layer.addTo(map);else map.removeLayer(adm1Layer);};
+$('#langSelect').onchange=e=>{applyLanguage(e.target.value);fillCatalog();renderList();};
 let hintT;function flashHint(m){const h=$('#hint');h.textContent=m;h.classList.add('show');clearTimeout(hintT);hintT=setTimeout(()=>h.classList.remove('show'),2600);}
 
 // ====== Start ======
+applyLanguage(currentLang);
 fillCatalog();renderList();
 placeSystem('bohdana');placeSystem('loras');
 openPanel();

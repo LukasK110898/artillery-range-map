@@ -9,25 +9,33 @@
 </head>
 <body>
 <div id="map"></div>
-<button id="toggle" aria-label="Menü">☰</button>
+<button id="toggle" aria-label="Menue">MENU</button>
 <div class="hint" id="hint"></div>
 
 <div id="panel">
   <div class="ph">
     <div><h1>Artillerie-Reichweiten</h1><div class="sub">Reichweiten &amp; Frontlinie · Ukraine-Theater</div></div>
-    <button class="close" id="closeBtn">×</button>
+    <button class="close" id="closeBtn">X</button>
   </div>
   <div class="body">
+
+    <div class="section-label">Sprache</div>
+    <div class="lang-row">
+      <select id="langSelect" aria-label="Sprache">
+        <option value="de">Deutsch</option>
+        <option value="en">English</option>
+      </select>
+    </div>
 
     <div class="section-label">Karten-Ebenen</div>
     <label class="switch"><input type="checkbox" id="frontToggle" checked><span>Besetztes Gebiet / Frontlinie</span></label>
     <label class="switch"><input type="checkbox" id="adm1Toggle" checked><span>Bundesland-/Regionsgrenzen (Europa)</span></label>
-    <button class="btn ghost full" id="refreshBtn">↻ Frontdaten live aktualisieren</button>
-    <div id="frontStatus" class="legend-note">Frontdaten werden live geladen …</div>
+    <button class="btn ghost full" id="refreshBtn">Refresh front data</button>
+    <div id="frontStatus" class="legend-note">Frontdaten werden live geladen ...</div>
 
     <div class="divider"></div>
     <div class="section-label">System hinzufügen</div>
-    <div class="add-row"><select id="catalogSelect"></select><button class="btn accent" id="addBtn">Setzen</button></div>
+    <div class="add-row"><select id="catalogSelect"></select><button class="btn accent" id="addBtn">Add</button></div>
     <button class="btn ghost full" id="newSysBtn">+ Eigenes System anlegen</button>
     <div id="builder">
       <div class="divider"></div>
@@ -43,7 +51,11 @@
     <div class="divider"></div>
     <div class="section-label">Platzierte Systeme</div>
     <div id="list"></div>
-    <div class="legend-note">Reichweiten sind veröffentlichte, ungefähre Hersteller-/Referenzangaben (je nach Munition/Ladung variabel) – über „Benutzerdefiniert" anpassbar. Die Front-Ebene zeigt die Flächenkontrolle (besetztes Gebiet) aus offener OSINT-Quelle (DeepStateMap), keine präzisen Truppenpositionen.</div>
+    <div class="legend-note" id="rangeNote">Reichweiten sind veroefentlichte, ungefaehre Hersteller-/Referenzangaben (je nach Munition/Ladung variabel) - ueber "Benutzerdefiniert" anpassbar. Die Front-Ebene zeigt die Flaechenkontrolle (besetztes Gebiet) aus offener OSINT-Quelle (DeepStateMap), keine praezisen Truppenpositionen.</div>
+    <div class="footer-note" id="footerNote">
+      <div id="implementationNote">Umgesetzt mit Claude Opus 4.7.</div>
+      <div>Tool by Lukas Knorr</div>
+    </div>
   </div>
 </div>
 
