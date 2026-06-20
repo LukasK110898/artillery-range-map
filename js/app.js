@@ -23,6 +23,15 @@ const CATALOG = [
       {name:'Standard-HE', range:24},{name:'RAP', range:30},{name:'Excalibur (gelenkt)', range:40} ]},
   { key:'himars', group:'NATO / Westen', name:'M142 HIMARS', cal:'227 mm Raketenwerfer', ammo:[
       {name:'GMLRS (gelenkt)', range:84},{name:'ER-GMLRS', range:150},{name:'ATACMS (takt. Rakete)', range:300} ]},
+  // ---------- Marschflugkörper / NATO ----------
+  { key:'tomahawk', group:'Marschflugkörper / NATO', classKey:'cruiseMissile', name:'Tomahawk (RGM/UGM-109)', cal:'See-/U-Boot-gestützter Marschflugkörper', ammo:[
+      {name:'TLAM-C/D (typische Varianten)', range:1300},{name:'Block IV/V TLAM-E', range:1600},{name:'Langreichweiten-Variante (oberer Referenzwert)', range:2500} ]},
+  { key:'jassm', group:'Marschflugkörper / NATO', classKey:'cruiseMissile', name:'AGM-158 JASSM', cal:'Luftgestützter Marschflugkörper', ammo:[
+      {name:'AGM-158A JASSM', range:370},{name:'AGM-158B JASSM-ER', range:1000},{name:'AGM-158D JASSM-XR', range:1800} ]},
+  { key:'stormshadow', group:'Marschflugkörper / NATO', classKey:'cruiseMissile', name:'Storm Shadow / SCALP-EG', cal:'Luftgestützter Marschflugkörper', ammo:[
+      {name:'Storm Shadow / SCALP-EG', range:250} ]},
+  { key:'taurus', group:'Marschflugkörper / NATO', classKey:'cruiseMissile', name:'TAURUS KEPD 350', cal:'Luftgestützter Marschflugkörper', ammo:[
+      {name:'KEPD 350', range:500} ]},
   // ---------- Russland ----------
   { key:'msta', group:'Russland', name:'2S19 Msta-S', cal:'152 mm / L47', ammo:[
       {name:'Standard-HE', range:25},{name:'Base Bleed (OF-61)', range:29},{name:'RAP (raketenunterstützt)', range:40},{name:'Krasnopol (gelenkt)', range:20} ]},
@@ -40,6 +49,11 @@ const CATALOG = [
       {name:'Standard-Rakete', range:70},{name:'Extended-Range', range:90} ]},
   { key:'tornados', group:'Russland', name:'9A52-4 Tornado-S', cal:'300 mm Raketenwerfer', ammo:[
       {name:'Gelenkte Rakete (9M542)', range:120},{name:'Neue Rakete (beansprucht)', range:200} ]},
+  // ---------- Marschflugkörper / Russland ----------
+  { key:'kalibr', group:'Marschflugkörper / Russland', classKey:'cruiseMissile', name:'3M-14 Kalibr (SS-N-30A)', cal:'See-/U-Boot-gestützter Marschflugkörper', ammo:[
+      {name:'Unterer Referenzwert', range:1500},{name:'Oberer Referenzwert', range:2500} ]},
+  { key:'kh101', group:'Marschflugkörper / Russland', classKey:'cruiseMissile', name:'Kh-101 / Kh-102', cal:'Luftgestützter Marschflugkörper', ammo:[
+      {name:'Kh-101 (konventionell)', range:2500},{name:'Kh-101/102 (oberer Referenzwert)', range:2800} ]},
   // ---------- Ukraine ----------
   { key:'bohdana', group:'Ukraine', name:'2S22 Bohdana', cal:'155 mm / L52 · inländisch', ammo:[
       {name:'Standard-HE', range:42},{name:'RAP (raketenunterstützt)', range:60},{name:'Excalibur (gelenkt)', range:50} ]},
@@ -47,6 +61,13 @@ const CATALOG = [
       {name:'Standard-HE', range:15},{name:'RAP', range:21} ]},
   { key:'d30', group:'Ukraine', name:'D-30 (gezogen)', cal:'122 mm', ammo:[
       {name:'Standard-HE', range:15},{name:'RAP', range:21} ]},
+  // ---------- Marschflugkörper / Ukraine ----------
+  { key:'neptune', group:'Marschflugkörper / Ukraine', classKey:'cruiseMissile', name:'R-360 Neptune', cal:'Ukrainischer Marschflugkörper', ammo:[
+      {name:'R-360 Neptune', range:280},{name:'Long Neptune', range:1000} ]},
+  { key:'palianytsia', group:'Marschflugkörper / Ukraine', classKey:'cruiseMissile', name:'Palianytsia', cal:'Ukrainischer Raketen-/Marschflugkörper-ähnlicher Flugkörper', ammo:[
+      {name:'Öffentlicher Referenzwert', range:650} ]},
+  { key:'peklo', group:'Marschflugkörper / Ukraine', classKey:'cruiseMissile', name:'Peklo', cal:'Ukrainischer Raketen-/Drohnenflugkörper', ammo:[
+      {name:'Öffentlicher Referenzwert', range:700} ]},
 ];
 const PALETTE = ['#38bdf8','#f97316','#a78bfa','#34d399','#f472b6','#facc15','#fb7185','#22d3ee','#c084fc','#4ade80'];
 const I18N = {
@@ -63,7 +84,7 @@ const I18N = {
     loadingFront: 'Frontdaten werden live geladen ...',
     frontLoading: 'Lade aktuelle Frontdaten ...',
     frontOffline: 'Frontdaten derzeit nicht abrufbar (Quelle offline oder Netz blockiert). Erneut versuchen mit "Refresh".',
-    frontLoaded: ds => 'Stand ' + fmtDate(ds) + ' · Quelle: DeepStateMap (OSINT).',
+    frontLoaded: ds => 'Stand ' + fmtDate(ds) + ' · Quelle: <a href="https://github.com/cyterat/deepstate-map-data" target="_blank" rel="noopener">cyterat/deepstate-map-data</a> / <a href="https://deepstatemap.live/license-en.html" target="_blank" rel="noopener">DeepStateMap</a>.',
     addSystem: 'System hinzufuegen',
     add: 'Setzen',
     ownSystem: 'Eigenes System',
@@ -77,9 +98,11 @@ const I18N = {
     cancel: 'Abbrechen',
     placed: 'Platzierte Systeme',
     empty: 'Noch nichts platziert.<br>Waehle oben ein System und tippe "Setzen".',
-    rangeNote: 'Reichweiten sind veroefentlichte, ungefaehre Hersteller-/Referenzangaben (je nach Munition/Ladung variabel) - ueber "Benutzerdefiniert" anpassbar. Die Front-Ebene zeigt die Flaechenkontrolle (besetztes Gebiet) aus offener OSINT-Quelle (DeepStateMap), keine praezisen Truppenpositionen.',
-    footerBuild: 'Umgesetzt mit Claude Opus 4.7.',
+    rangeNote: 'Reichweiten sind veroefentlichte, ungefaehre Hersteller-/Referenzangaben (je nach Munition/Ladung/Systemvariante variabel) - ueber "Benutzerdefiniert" anpassbar. Die Front-Ebene zeigt Flaechenkontrolle aus offener OSINT-Quelle, keine praezisen Truppenpositionen.',
+    footerBuild: 'Kartenkacheln: OpenStreetMap contributors und CARTO.',
+    footerDeepState: 'Frontdaten: cyterat/deepstate-map-data (GPL-3.0), abgeleitet aus DeepStateMap.live.',
     footerTool: 'Tool by Lukas Knorr',
+    cruiseMissile: 'Marschflugkoerper',
     vis: 'VIS',
     hide: 'HIDE',
     zoom: 'ZOOM',
@@ -91,6 +114,9 @@ const I18N = {
       'NATO / Westen': 'NATO / Westen',
       'Russland': 'Russland',
       'Ukraine': 'Ukraine',
+      'Marschflugkörper / NATO': 'Marschflugkoerper / NATO',
+      'Marschflugkörper / Ukraine': 'Marschflugkoerper / Ukraine',
+      'Marschflugkörper / Russland': 'Marschflugkoerper / Russland',
       'Eigene Systeme': 'Eigene Systeme'
     },
     setHint: name => '"' + name + '" zum Katalog hinzugefuegt',
@@ -109,7 +135,7 @@ const I18N = {
     loadingFront: 'Front data is loading live ...',
     frontLoading: 'Loading current front data ...',
     frontOffline: 'Front data is currently unavailable (source offline or network blocked). Try again with "Refresh".',
-    frontLoaded: ds => 'As of ' + fmtDate(ds) + ' · Source: DeepStateMap (OSINT).',
+    frontLoaded: ds => 'As of ' + fmtDate(ds) + ' · Source: <a href="https://github.com/cyterat/deepstate-map-data" target="_blank" rel="noopener">cyterat/deepstate-map-data</a> / <a href="https://deepstatemap.live/license-en.html" target="_blank" rel="noopener">DeepStateMap</a>.',
     addSystem: 'Add system',
     add: 'Add',
     ownSystem: 'Custom system',
@@ -123,9 +149,11 @@ const I18N = {
     cancel: 'Cancel',
     placed: 'Placed systems',
     empty: 'Nothing placed yet.<br>Choose a system above and tap "Add".',
-    rangeNote: 'Ranges are published, approximate manufacturer/reference values (varying by ammunition/charge) - adjustable via "Custom". The front layer shows area control (occupied territory) from an open OSINT source (DeepStateMap), not precise troop positions.',
-    footerBuild: 'Implemented with Claude Opus 4.7.',
+    rangeNote: 'Ranges are published, approximate manufacturer/reference values (varying by ammunition/charge/system variant) - adjustable via "Custom". The front layer shows area control from an open OSINT source, not precise troop positions.',
+    footerBuild: 'Map tiles: OpenStreetMap contributors and CARTO.',
+    footerDeepState: 'Front data: cyterat/deepstate-map-data (GPL-3.0), derived from DeepStateMap.live.',
     footerTool: 'Tool by Lukas Knorr',
+    cruiseMissile: 'Cruise missile',
     vis: 'VIS',
     hide: 'HIDE',
     zoom: 'ZOOM',
@@ -137,6 +165,9 @@ const I18N = {
       'NATO / Westen': 'NATO / West',
       'Russland': 'Russia',
       'Ukraine': 'Ukraine',
+      'Marschflugkörper / NATO': 'Cruise missiles / NATO',
+      'Marschflugkörper / Ukraine': 'Cruise missiles / Ukraine',
+      'Marschflugkörper / Russland': 'Cruise missiles / Russia',
       'Eigene Systeme': 'Custom Systems'
     },
     setHint: name => '"' + name + '" added to catalog',
@@ -148,7 +179,7 @@ let currentLang = localStorage.getItem('arm_lang') || 'de';
 // ====== Karte mit detailliertem dunklem Basemap (Städte, Straßen, Grenzen) ======
 const map = L.map('map',{zoomControl:true,worldCopyJump:true,minZoom:3,maxZoom:18}).setView([48.4,33],6);
 L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
-  subdomains:'abcd', maxZoom:20, attribution:'© OpenStreetMap-Mitwirkende, © CARTO'
+  subdomains:'abcd', maxZoom:20, attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attributions">CARTO</a>'
 }).addTo(map);
 
 // ----- Europa Bundesland-/Regionsgrenzen (lokal eingebettet) -----
@@ -175,7 +206,7 @@ async function refreshFront(){
       if(!r.ok) continue;
       const gj=await r.json();
       setOccupied(gj);
-      st.textContent=t('frontLoaded')(ds);
+      st.innerHTML=t('frontLoaded')(ds);
       return true;
     }catch(e){}
   }
@@ -219,6 +250,7 @@ function applyLanguage(lang){
   document.querySelectorAll('.section-label')[4].textContent=copy.placed;
   $('#rangeNote').textContent=copy.rangeNote;
   $('#implementationNote').textContent=copy.footerBuild;
+  $('#deepstateLicenseNote').textContent=copy.footerDeepState;
   $('#footerNote div:last-child').textContent=copy.footerTool;
 }
 function allSystems(){return [...CATALOG,...customSystems];}
@@ -227,7 +259,7 @@ function fillCatalog(){
   const sel=$('#catalogSelect'); sel.innerHTML='';
   const groups={};
   allSystems().forEach(s=>{const g=getGroupLabel(s.group||'Eigene Systeme');(groups[g]=groups[g]||[]).push(s);});
-  const order=['NATO / Westen','Russland','Ukraine','Eigene Systeme'];
+  const order=['NATO / Westen','Russland','Ukraine','Marschflugkörper / NATO','Marschflugkörper / Ukraine','Marschflugkörper / Russland','Eigene Systeme'];
   const translatedOrder=order.map(g=>getGroupLabel(g));
   const keys=[...translatedOrder.filter(k=>groups[k]),...Object.keys(groups).filter(k=>!translatedOrder.includes(k))];
   keys.forEach(g=>{const og=document.createElement('optgroup');og.label=g;
@@ -256,7 +288,8 @@ function updateInst(i){
   i.circle.setRadius(r*1000);
   i.circle.setStyle({opacity:i.visible?.9:0,fillOpacity:i.visible?.10:0});
   i.marker.setOpacity(i.visible?1:.25);
-  i.marker.bindPopup('<b>'+i.sys.name+'</b><br>'+currentAmmoName(i)+'<br>'+t('rangeLabel')+': <b>'+r+' km</b>');
+  const classLine=i.sys.classKey?t(i.sys.classKey)+'<br>':'';
+  i.marker.bindPopup('<b>'+i.sys.name+'</b><br>'+classLine+currentAmmoName(i)+'<br>'+t('rangeLabel')+': <b>'+r+' km</b>');
 }
 function removeInst(id){const k=placed.findIndex(p=>p.id===id);if(k<0)return;map.removeLayer(placed[k].marker);map.removeLayer(placed[k].circle);placed.splice(k,1);renderList();}
 function renderList(){
