@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Artillerie-Reichweitenkarte</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="map"></div>
+<button id="toggle" aria-label="Menü">☰</button>
+<div class="hint" id="hint"></div>
+
+<div id="panel">
+  <div class="ph">
+    <div><h1>Artillerie-Reichweiten</h1><div class="sub">Reichweiten &amp; Frontlinie · Ukraine-Theater</div></div>
+    <button class="close" id="closeBtn">×</button>
+  </div>
+  <div class="body">
+
+    <div class="section-label">Karten-Ebenen</div>
+    <label class="switch"><input type="checkbox" id="frontToggle" checked><span>Besetztes Gebiet / Frontlinie</span></label>
+    <label class="switch"><input type="checkbox" id="adm1Toggle" checked><span>Bundesland-/Regionsgrenzen (Europa)</span></label>
+    <button class="btn ghost full" id="refreshBtn">↻ Frontdaten live aktualisieren</button>
+    <div id="frontStatus" class="legend-note">Frontdaten werden live geladen …</div>
+
+    <div class="divider"></div>
+    <div class="section-label">System hinzufügen</div>
+    <div class="add-row"><select id="catalogSelect"></select><button class="btn accent" id="addBtn">Setzen</button></div>
+    <button class="btn ghost full" id="newSysBtn">+ Eigenes System anlegen</button>
+    <div id="builder">
+      <div class="divider"></div>
+      <div class="section-label">Eigenes System</div>
+      <input id="nsName" placeholder="Name (z. B. eigenes System)">
+      <input id="nsCal" placeholder="Kaliber / Rohr (optional)" style="margin-top:8px">
+      <label style="font-size:10px;color:var(--muted2);display:block;margin:12px 0 6px;letter-spacing:.5px;text-transform:uppercase">Munition &amp; Reichweite (km)</label>
+      <div id="ammoRows"></div>
+      <button class="btn ghost" id="addAmmoBtn" style="font-size:12px;padding:7px 10px">+ Munition</button>
+      <div style="display:flex;gap:8px;margin-top:12px"><button class="btn accent" id="saveSysBtn" style="flex:1">Speichern</button><button class="btn ghost" id="cancelSysBtn">Abbrechen</button></div>
+    </div>
+
+    <div class="divider"></div>
+    <div class="section-label">Platzierte Systeme</div>
+    <div id="list"></div>
+    <div class="legend-note">Reichweiten sind veröffentlichte, ungefähre Hersteller-/Referenzangaben (je nach Munition/Ladung variabel) – über „Benutzerdefiniert" anpassbar. Die Front-Ebene zeigt die Flächenkontrolle (besetztes Gebiet) aus offener OSINT-Quelle (DeepStateMap), keine präzisen Truppenpositionen.</div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
