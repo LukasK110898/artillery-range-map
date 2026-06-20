@@ -35,6 +35,12 @@ This project separates its own code license from third-party data and services.
 - DeepStateMap license / attribution reference: https://deepstatemap.live/license-en.html
 - The data is not vendored into this project; it is fetched at runtime from GitHub raw URLs.
 
+## Terrain / Placement Constraints
+
+The current app uses raster basemap tiles. Raster tiles are images and do not expose reliable geometry for forests, lakes, rivers, roads, or fields. Enforcing placement rules such as "no forest / no water" would require an additional vector data source, for example OpenStreetMap landuse and natural polygons via a dedicated vector tile provider or a carefully rate-limited Overpass API workflow.
+
+If implemented later, the blocked layer should remain optional and visually subtle, because land-cover data can be incomplete or outdated.
+
 ## Range Values
 
 Ranges are approximate public reference values and can vary by variant, payload, launch profile, software block, export version, and source.

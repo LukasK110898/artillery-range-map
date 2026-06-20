@@ -9,6 +9,7 @@ The app shows systems from NATO/West, Russia, and Ukraine on a dark map and load
 - Ammo and range selection per system.
 - Separate cruise missile class with NATO, Ukraine, and Russia groups.
 - Star marker for systems with especially high reported use or visibility in open-source reporting.
+- Compact system labels on the map with a three-state toggle: compact, detail, off.
 - Create custom systems with custom ammunition entries.
 - Top-right language toggle between English and German.
 - Footer note with data attribution and the author line "Tool by Lukas Knorr".
@@ -27,6 +28,7 @@ Open `http://localhost:8000` in your browser.
 - Switch the UI language between English and German with the top-right toggle.
 - Select a system from the catalog to place it on the map.
 - Systems marked with `★` are a qualitative high-use/high-visibility marker based on open-source reporting, not a statistical ranking.
+- Use the label button under the language toggle to switch map labels between compact, detail, and off.
 - Drag markers to reposition them; range and ammo can be adjusted per entry.
 - The front layer loads live GeoJSON data when the source is reachable.
 
@@ -59,6 +61,7 @@ Die App zeigt Systeme aus NATO/Westen, Russland und Ukraine auf einer dunklen Ka
 - Munition und Reichweite pro System auswaehlen.
 - Separate Marschflugkoerper-Klasse mit Gruppen fuer NATO, Ukraine und Russland.
 - Sternmarkierung fuer Systeme mit besonders haeufig berichteter Nutzung oder hoher Sichtbarkeit in offenen Berichten.
+- Kompakte Systembezeichnungen auf der Karte mit dreistufigem Schalter: kurz, Detail, aus.
 - Eigene Systeme mit benutzerdefinierten Munitionseintraegen anlegen.
 - Sprachumschaltung zwischen Deutsch und Englisch ueber den Schalter oben rechts.
 - Footer-Hinweis mit Datenquellenvermerk und der Autorenzeile "Tool by Lukas Knorr".
@@ -77,6 +80,7 @@ Anschliessend `http://localhost:8000` im Browser oeffnen.
 - Die Sprache wechselst du ueber den Schalter oben rechts.
 - Systeme lassen sich ueber die Katalog-Auswahl auf der Karte platzieren.
 - Mit `★` markierte Systeme sind qualitativ als haeufig berichtet bzw. besonders sichtbar markiert, nicht als statistisches Ranking.
+- Ueber den Label-Schalter unter der Sprachauswahl wechselst du Kartenbezeichnungen zwischen kurz, Detail und aus.
 - Der Marker ist verschiebbar; Reichweite und Munition koennen pro Eintrag angepasst werden.
 - Die Front-Ebene laedt aktuelle GeoJSON-Daten nach, sofern die Quelle erreichbar ist.
 

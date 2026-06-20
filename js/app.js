@@ -105,6 +105,10 @@ const I18N = {
     cruiseMissile: 'Marschflugkoerper',
     operatorLabel: 'Nutzer',
     maxRangeLabel: 'Max RW',
+    labelToggleTitle: 'Systembezeichnungen umschalten',
+    labelModeCompact: 'KURZ',
+    labelModeFull: 'DETAIL',
+    labelModeOff: 'AUS',
     vis: 'VIS',
     hide: 'HIDE',
     zoom: 'ZOOM',
@@ -164,6 +168,10 @@ const I18N = {
     cruiseMissile: 'Cruise missile',
     operatorLabel: 'User',
     maxRangeLabel: 'Max range',
+    labelToggleTitle: 'Toggle system labels',
+    labelModeCompact: 'LABEL',
+    labelModeFull: 'DETAIL',
+    labelModeOff: 'OFF',
     vis: 'VIS',
     hide: 'HIDE',
     zoom: 'ZOOM',
@@ -235,13 +243,15 @@ let placed=[], nextId=1, colorIdx=0, customSystems=[];
 const $=s=>document.querySelector(s);
 const panel=$('#panel');
 let labelLayoutRaf=null;
+const LABEL_MODES=['compact','full','off'];
+let labelMode=LABEL_MODES.includes(localStorage.getItem('arm_label_mode'))?localStorage.getItem('arm_label_mode'):'compact';
 function t(key){return (I18N[currentLang] && I18N[currentLang][key]) || I18N.de[key] || key;}
 function getGroupLabel(group){return (I18N[currentLang].groupMap && I18N[currentLang].groupMap[group]) || group;}
 function displayName(sys){return (sys.topUsed?'★ ':'')+sys.name;}
 function esc(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function clamp(n,min,max){return Math.max(min,Math.min(max,n));}
-function getLabelScale(){return clamp(0.82,1.34,0.72+map.getZoom()*0.05);}
-function labelSize(){const s=getLabelScale();return {scale:s,w:174*s,h:56*s,offset:16*s};}
+function getLabelScale(){return clamp(0.72,1.12,0.62+map.getZoom()*0.04);}
+function labelSize(){const s=getLabelScale();return labelMode==='full'?{scale:s,w:154*s,h:48*s,offset:14*s}:{scale:s,w:126*s,h:24*s,offset:12*s};}
 function maxRange(sys){return Math.max(...sys.ammo.map(a=>Number(a.range)||0));}
 function operatorKey(sys){
   const group=sys.group||'';
@@ -255,7 +265,7 @@ function operatorLabel(sys){
   return (I18N[currentLang].operatorMap&&I18N[currentLang].operatorMap[key])||key;
 }
 function labelHtml(inst){
-  return '<div class="range-label-inner" style="--label-color:'+inst.color+'">'+
+  return '<div class="range-label-inner '+(labelMode==='full'?'full':'compact')+'" style="--label-color:'+inst.color+'">'+
     '<div class="range-label-title">'+esc(displayName(inst.sys))+'</div>'+
     '<div class="range-label-meta"><span>'+esc(t('operatorLabel'))+'</span><span>'+esc(operatorLabel(inst.sys))+'</span></div>'+
     '<div class="range-label-meta"><span>'+esc(t('maxRangeLabel'))+'</span><span>'+maxRange(inst.sys)+' km</span></div>'+
@@ -292,7 +302,7 @@ function updateLabel(inst){
     inst.labelMarker.setLatLng([inst.lat,inst.lng]);
     inst.labelMarker.setIcon(labelIcon(inst,inst.labelPos||'right'));
   }
-  inst.labelMarker.setOpacity(inst.visible?1:0);
+  inst.labelMarker.setOpacity(inst.visible&&labelMode!=='off'?1:0);
 }
 function overlapsAny(bounds,others){return others.some(b=>bounds.intersects(b));}
 function scoreBounds(bounds,others){
@@ -308,7 +318,7 @@ function layoutLabels(){
   const occupied=[];
   const positions=['right','left','top','bottom','topRight','bottomRight','topLeft','bottomLeft'];
   placed.forEach(inst=>{
-    if(!inst.visible||!inst.labelMarker) return;
+    if(!inst.visible||!inst.labelMarker||labelMode==='off') return;
     const p=map.latLngToLayerPoint([inst.lat,inst.lng]);
     const preferred=[inst.labelPos||'right',...positions.filter(pos=>pos!==inst.labelPos)];
     let best=preferred[0],bestBounds=null,bestScore=Infinity;
@@ -328,6 +338,26 @@ function scheduleLabelLayout(){
   if(labelLayoutRaf) cancelAnimationFrame(labelLayoutRaf);
   labelLayoutRaf=requestAnimationFrame(()=>{labelLayoutRaf=null;layoutLabels();});
 }
+function labelModeText(){
+  if(labelMode==='full') return t('labelModeFull');
+  if(labelMode==='off') return t('labelModeOff');
+  return t('labelModeCompact');
+}
+function updateLabelToggle(){
+  const btn=$('#labelToggle');
+  btn.textContent=labelModeText();
+  btn.title=t('labelToggleTitle');
+  btn.setAttribute('aria-label',t('labelToggleTitle'));
+  btn.classList.toggle('active',labelMode!=='off');
+}
+function cycleLabelMode(){
+  const idx=LABEL_MODES.indexOf(labelMode);
+  labelMode=LABEL_MODES[(idx+1)%LABEL_MODES.length];
+  localStorage.setItem('arm_label_mode',labelMode);
+  updateLabelToggle();
+  placed.forEach(updateLabel);
+  scheduleLabelLayout();
+}
 function applyLanguage(lang){
   currentLang=I18N[lang]?lang:'de';
   localStorage.setItem('arm_lang', currentLang);
@@ -341,6 +371,7 @@ function applyLanguage(lang){
     btn.classList.toggle('active',active);
     btn.setAttribute('aria-pressed',active?'true':'false');
   });
+  updateLabelToggle();
   $('#panel .ph h1').textContent=copy.panelTitle;
   $('#panel .ph .sub').textContent=copy.panelSub;
   document.querySelectorAll('.section-label')[0].textContent=copy.mapLayers;
@@ -457,6 +488,7 @@ $('#refreshBtn').onclick=()=>refreshFront();
 $('#frontToggle').onchange=e=>{if(e.target.checked){if(occLayer)occLayer.addTo(map);else refreshFront();}else if(occLayer)map.removeLayer(occLayer);};
 $('#adm1Toggle').onchange=e=>{if(e.target.checked)adm1Layer.addTo(map);else map.removeLayer(adm1Layer);};
 document.querySelectorAll('#langToggle button').forEach(btn=>btn.onclick=()=>{applyLanguage(btn.dataset.lang);fillCatalog();renderList();});
+$('#labelToggle').onclick=cycleLabelMode;
 map.on('zoomend moveend',scheduleLabelLayout);
 let hintT;function flashHint(m){const h=$('#hint');h.textContent=m;h.classList.add('show');clearTimeout(hintT);hintT=setTimeout(()=>h.classList.remove('show'),2600);}
 
