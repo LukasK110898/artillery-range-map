@@ -281,7 +281,8 @@ let currentTheme = localStorage.getItem('arm_theme') === 'light' ? 'light' : 'da
 document.body.dataset.theme = currentTheme;
 
 // ====== Karte mit detailliertem Basemap (Städte, Straßen, Grenzen) ======
-const map = L.map('map',{zoomControl:true,worldCopyJump:true,minZoom:3,maxZoom:18}).setView([48.4,33],6);
+const map = L.map('map',{zoomControl:false,worldCopyJump:true,minZoom:3,maxZoom:18}).setView([48.4,33],6);
+L.control.zoom({position:'bottomleft'}).addTo(map);
 const TILE_LAYERS={
   dark:'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
   light:'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png'

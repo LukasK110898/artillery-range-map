@@ -12,6 +12,8 @@
     if(startMarker&&endMarker) line.setLatLngs([startMarker.getLatLng(),endMarker.getLatLng()]);
   }
   function clearTerrain(){
+    requestId++;
+    clearTimeout(debounceTimer);
     [startMarker,endMarker,line].forEach(layer=>{if(layer) map.removeLayer(layer);});
     startMarker=null;endMarker=null;line=null;
     if(panel) panel.hidden=true;
@@ -66,7 +68,8 @@
   }
   function renderPanel(content){
     panel.hidden=false;
-    panel.innerHTML='<div class="floating-head"><div><div class="floating-title">'+esc(t('terrainProfile'))+'</div><div class="floating-sub">'+esc(t('terrainSource'))+'</div></div><button class="iconbtn" id="terrainClose" type="button">X</button></div>'+content;
+    panel.innerHTML='<div class="floating-head"><div><div class="floating-title">'+esc(t('terrainProfile'))+'</div><div class="floating-sub">'+esc(t('terrainSource'))+'</div></div><div class="tool-actions"><button class="iconbtn" id="terrainDelete" type="button">'+esc(t('del'))+'</button><button class="iconbtn" id="terrainClose" type="button">X</button></div></div>'+content;
+    panel.querySelector('#terrainDelete').onclick=clearTerrain;
     panel.querySelector('#terrainClose').onclick=()=>{panel.hidden=true;};
   }
   async function updateProfile(){
