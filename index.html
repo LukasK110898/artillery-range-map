@@ -29,6 +29,8 @@
     <div class="section-label">Karten-Ebenen</div>
     <label class="switch"><input type="checkbox" id="frontToggle" checked><span>Besetztes Gebiet / Frontlinie</span></label>
     <label class="switch"><input type="checkbox" id="adm1Toggle" checked><span>Bundesland-/Regionsgrenzen (Europa)</span></label>
+    <label class="switch"><input type="checkbox" id="capitalToggle" checked><span>Hauptstädte</span></label>
+    <label class="switch"><input type="checkbox" id="infraToggle" checked><span>Infrastruktur</span></label>
     <button class="btn ghost full" id="refreshBtn">Refresh front data</button>
     <div id="frontStatus" class="legend-note">Frontdaten werden live geladen ...</div>
 
@@ -41,6 +43,11 @@
       <div class="section-label">Eigenes System</div>
       <input id="nsName" placeholder="Name (z. B. eigenes System)">
       <input id="nsCal" placeholder="Kaliber / Rohr (optional)" style="margin-top:8px">
+      <select id="nsClass" style="margin-top:8px">
+        <option value="artillery">Artillerie</option>
+        <option value="cruiseMissile">Marschflugkörper</option>
+        <option value="drone">Drohne</option>
+      </select>
       <label style="font-size:10px;color:var(--muted2);display:block;margin:12px 0 6px;letter-spacing:.5px;text-transform:uppercase">Munition &amp; Reichweite (km)</label>
       <div id="ammoRows"></div>
       <button class="btn ghost" id="addAmmoBtn" style="font-size:12px;padding:7px 10px">+ Munition</button>
@@ -53,8 +60,10 @@
       <button class="btn ghost" id="terrainBtn" type="button">Terrain</button>
       <button class="btn ghost" id="coordsBtn" type="button">Koordinaten</button>
       <button class="btn ghost" id="measureBtn" type="button">Messen</button>
+      <button class="btn ghost" id="eventsBtn" type="button">Ereignisse</button>
       <button class="btn ghost" id="shareBtn" type="button">Share</button>
     </div>
+    <div id="eventsList" class="tool-list"></div>
     <div id="terrainList" class="tool-list"></div>
     <div id="measurementList" class="tool-list"></div>
 
@@ -84,6 +93,8 @@
 <script src="js/terrain.js"></script>
 <script src="js/coordinates.js"></script>
 <script src="js/measurement.js"></script>
+<script src="js/events.js"></script>
+<script src="js/places.js"></script>
 <script src="js/share.js"></script>
 <script src="js/app.js"></script>
 </body>

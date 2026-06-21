@@ -32,6 +32,11 @@ const CATALOG = [
       {name:'Storm Shadow / SCALP-EG', range:250} ]},
   { key:'taurus', group:'Marschflugkörper / NATO', classKey:'cruiseMissile', name:'TAURUS KEPD 350', cal:'Luftgestützter Marschflugkörper', ammo:[
       {name:'KEPD 350', range:500} ]},
+  // ---------- Drohnen / NATO ----------
+  { key:'tb2', group:'Drohnen / NATO', classKey:'drone', name:'Bayraktar TB2', cal:'MALE-Aufklärungs-/Kampfdrohne', ammo:[
+      {name:'Line-of-sight Steuerreichweite', range:300},{name:'Typische Einsatzreichweite', range:150} ]},
+  { key:'switchblade600', group:'Drohnen / NATO', classKey:'drone', name:'Switchblade 600', cal:'Loitering Munition', ammo:[
+      {name:'Kontroll-/Angriffsreichweite', range:40},{name:'Erweiterter DDL-Link', range:90} ]},
   // ---------- Russland ----------
   { key:'msta', group:'Russland', topUsed:true, name:'2S19 Msta-S', cal:'152 mm / L47', ammo:[
       {name:'Standard-HE', range:25},{name:'Base Bleed (OF-61)', range:29},{name:'RAP (raketenunterstützt)', range:40},{name:'Krasnopol (gelenkt)', range:20} ]},
@@ -54,6 +59,13 @@ const CATALOG = [
       {name:'Unterer Referenzwert', range:1500},{name:'Oberer Referenzwert', range:2500} ]},
   { key:'kh101', group:'Marschflugkörper / Russland', classKey:'cruiseMissile', name:'Kh-101 / Kh-102', cal:'Luftgestützter Marschflugkörper', ammo:[
       {name:'Kh-101 (konventionell)', range:2500},{name:'Kh-101/102 (oberer Referenzwert)', range:2800} ]},
+  // ---------- Drohnen / Russland ----------
+  { key:'shahed136', group:'Drohnen / Russland', classKey:'drone', topUsed:true, name:'Shahed-136 / Geran-2', cal:'One-way attack drone', ammo:[
+      {name:'Typischer Referenzwert', range:1000},{name:'Oberer Referenzwert', range:2000} ]},
+  { key:'lancet', group:'Drohnen / Russland', classKey:'drone', topUsed:true, name:'ZALA Lancet', cal:'Loitering Munition', ammo:[
+      {name:'Basis-Reichweite', range:40},{name:'Berichtete erweiterte Reichweite', range:70} ]},
+  { key:'orlan10', group:'Drohnen / Russland', classKey:'drone', name:'Orlan-10', cal:'Aufklärungs-/EW-Drohne', ammo:[
+      {name:'Steuer-/Einsatzradius', range:120},{name:'Autonome Flugstrecke', range:600} ]},
   // ---------- Ukraine ----------
   { key:'bohdana', group:'Ukraine', topUsed:true, name:'2S22 Bohdana', cal:'155 mm / L52 · inländisch', ammo:[
       {name:'Standard-HE', range:42},{name:'RAP (raketenunterstützt)', range:60},{name:'Excalibur (gelenkt)', range:50} ]},
@@ -70,6 +82,17 @@ const CATALOG = [
       {name:'Öffentlicher Referenzwert', range:650} ]},
   { key:'peklo', group:'Marschflugkörper / Ukraine', classKey:'cruiseMissile', name:'Peklo', cal:'Ukrainischer Raketen-/Drohnenflugkörper', ammo:[
       {name:'Öffentlicher Referenzwert', range:700} ]},
+  // ---------- Drohnen / Ukraine ----------
+  { key:'fp1', group:'Drohnen / Ukraine', classKey:'drone', topUsed:true, name:'Fire Point FP-1', cal:'Long-range one-way attack drone', ammo:[
+      {name:'FP-1 Deep-Strike', range:1600} ]},
+  { key:'liutyi', group:'Drohnen / Ukraine', classKey:'drone', topUsed:true, name:'AN-196 Liutyi', cal:'Long-range one-way attack drone', ammo:[
+      {name:'Berichtete Reichweite', range:1000},{name:'Deep-strike Referenz', range:1700} ]},
+  { key:'uj22', group:'Drohnen / Ukraine', classKey:'drone', name:'UJ-22 Airborne', cal:'Mehrzweck-/Angriffsdrohne', ammo:[
+      {name:'Gesteuerter Modus', range:100},{name:'Autonomer Modus', range:800} ]},
+  { key:'bober', group:'Drohnen / Ukraine', classKey:'drone', name:'UJ-26 Bober', cal:'Long-range one-way attack drone', ammo:[
+      {name:'Unterer Referenzwert', range:600},{name:'Oberer Referenzwert', range:1000} ]},
+  { key:'aq400', group:'Drohnen / Ukraine', classKey:'drone', name:'AQ-400 Scythe', cal:'One-way attack drone', ammo:[
+      {name:'Standard-Reichweite', range:750} ]},
 ];
 const PALETTE = ['#38bdf8','#f97316','#a78bfa','#34d399','#f472b6','#facc15','#fb7185','#22d3ee','#c084fc','#4ade80'];
 const I18N = {
@@ -82,6 +105,8 @@ const I18N = {
     mapLayers: 'Karten-Ebenen',
     occupiedFront: 'Besetztes Gebiet / Frontlinie',
     regions: 'Bundesland-/Regionsgrenzen (Europa)',
+    capitalsLayer: 'Hauptstaedte',
+    infrastructureLayer: 'Infrastruktur',
     refreshFront: 'Frontdaten live aktualisieren',
     loadingFront: 'Frontdaten werden live geladen ...',
     frontLoading: 'Lade aktuelle Frontdaten ...',
@@ -93,6 +118,7 @@ const I18N = {
     newSystem: '+ Eigenes System anlegen',
     customName: 'Name (z. B. eigenes System)',
     customCal: 'Kaliber / Rohr (optional)',
+    customClass: 'Systemtyp',
     ammoAndRange: 'Munition & Reichweite (km)',
     ammo: 'Munition',
     addAmmo: '+ Munition',
@@ -101,12 +127,14 @@ const I18N = {
     placed: 'Platzierte Systeme',
     artillery: 'Artillerie',
     cruiseMissiles: 'Marschflugkoerper',
+    drones: 'Drohnen',
     drawerCollapse: 'Platzierte Systeme einklappen',
     drawerExpand: 'Platzierte Systeme ausklappen',
     tools: 'Werkzeuge',
     terrain: 'Terrain',
     coordinates: 'Koordinaten',
     measure: 'Messen',
+    events: 'Ereignisse',
     share: 'Share',
     noteTitle: 'Titel',
     noteDescription: 'Beschreibung',
@@ -125,6 +153,14 @@ const I18N = {
     samples: 'Messpunkte',
     coordHint: 'Karte anklicken, um Koordinaten anzuzeigen',
     coordinatesTitle: 'Koordinaten',
+    capital: 'Hauptstadt',
+    infrastructure: 'Infrastruktur',
+    refinery: 'Raffinerie',
+    port: 'Hafen',
+    energy: 'Energie',
+    logistics: 'Logistik',
+    industrial: 'Industrie',
+    infraApprox: 'Grobe Stadt-/Hafenregion, keine praezise Anlagenposition.',
     coordUnavailable: 'nicht verfuegbar',
     copy: 'Copy',
     copied: 'Kopiert',
@@ -132,6 +168,30 @@ const I18N = {
     measureEndHint: 'Zielpunkt fuer Messung setzen',
     measureAgainHint: 'Messung gespeichert - naechsten Startpunkt setzen',
     measurement: 'Messung',
+    eventsTitle: 'OSINT-Hinweise',
+    eventsSource: 'NASA FIRMS Active Fire',
+    eventsButtonLoad: 'Hotspots laden',
+    eventsButtonClear: 'Layer leeren',
+    eventsButtonHide: 'Ausblenden',
+    eventsButtonShow: 'Einblenden',
+    eventsKeyLabel: 'NASA FIRMS Map Key',
+    eventsKeyPlaceholder: 'Kostenlosen FIRMS Map Key einfuegen',
+    eventsDaysLabel: 'Zeitraum',
+    eventsDayOption: d => d + (d===1?' Tag':' Tage'),
+    eventsAreaLabel: 'Gebiet',
+    eventsAreaWestRussia: 'West-/Suedrussland',
+    eventsHint: 'FIRMS zeigt Feuer-/Hitzequellen. Das sind Hinweise, keine bestaetigten Angriffe.',
+    eventsNoKey: 'Bitte kostenlosen NASA FIRMS Map Key eintragen.',
+    eventsLoading: 'FIRMS-Hotspots werden geladen ...',
+    eventsLoaded: n => n + ' Hotspots geladen',
+    eventsEmpty: 'Keine Hotspots im gewaehlten Zeitraum gefunden.',
+    eventsError: 'FIRMS-Hotspots konnten nicht geladen werden.',
+    eventHotspot: 'FIRMS-Hotspot',
+    eventConfidence: 'Confidence',
+    eventFrp: 'FRP',
+    eventUtc: 'UTC',
+    eventSatellite: 'Satellit',
+    eventDisclaimer: 'Hinweis, kein bestaetigter Angriff',
     shareCopied: 'Share-Link in URL gespeichert und kopiert',
     shareReady: 'Share-Link in URL gespeichert',
     empty: 'Noch nichts platziert.<br>Waehle oben ein System und tippe "Setzen".',
@@ -140,6 +200,7 @@ const I18N = {
     footerDeepState: 'Frontdaten: cyterat/deepstate-map-data (GPL-3.0), abgeleitet aus DeepStateMap.live.',
     footerTool: 'Tool by Lukas Knorr',
     cruiseMissile: 'Marschflugkoerper',
+    drone: 'Drohne',
     operatorLabel: 'Nutzer',
     maxRangeLabel: 'Max RW',
     labelToggleTitle: 'Systembezeichnungen umschalten',
@@ -163,6 +224,9 @@ const I18N = {
       'Marschflugkörper / NATO': 'Marschflugkoerper / NATO',
       'Marschflugkörper / Ukraine': 'Marschflugkoerper / Ukraine',
       'Marschflugkörper / Russland': 'Marschflugkoerper / Russland',
+      'Drohnen / NATO': 'Drohnen / NATO',
+      'Drohnen / Ukraine': 'Drohnen / Ukraine',
+      'Drohnen / Russland': 'Drohnen / Russland',
       'Eigene Systeme': 'Eigene Systeme'
     },
     operatorMap: {
@@ -183,6 +247,8 @@ const I18N = {
     mapLayers: 'Map layers',
     occupiedFront: 'Occupied area / front line',
     regions: 'State / region borders (Europe)',
+    capitalsLayer: 'Capitals',
+    infrastructureLayer: 'Infrastructure',
     refreshFront: 'Refresh front data',
     loadingFront: 'Front data is loading live ...',
     frontLoading: 'Loading current front data ...',
@@ -194,6 +260,7 @@ const I18N = {
     newSystem: '+ Create custom system',
     customName: 'Name (e.g. custom system)',
     customCal: 'Caliber / barrel (optional)',
+    customClass: 'System type',
     ammoAndRange: 'Ammo and range (km)',
     ammo: 'Ammo',
     addAmmo: '+ Ammo',
@@ -202,12 +269,14 @@ const I18N = {
     placed: 'Placed systems',
     artillery: 'Artillery',
     cruiseMissiles: 'Cruise missiles',
+    drones: 'Drones',
     drawerCollapse: 'Collapse placed systems',
     drawerExpand: 'Expand placed systems',
     tools: 'Tools',
     terrain: 'Terrain',
     coordinates: 'Coordinates',
     measure: 'Measure',
+    events: 'Events',
     share: 'Share',
     noteTitle: 'Title',
     noteDescription: 'Description',
@@ -226,6 +295,14 @@ const I18N = {
     samples: 'samples',
     coordHint: 'Click the map to show coordinates',
     coordinatesTitle: 'Coordinates',
+    capital: 'Capital',
+    infrastructure: 'Infrastructure',
+    refinery: 'Refinery',
+    port: 'Port',
+    energy: 'Energy',
+    logistics: 'Logistics',
+    industrial: 'Industrial',
+    infraApprox: 'Approximate city / port region, not a precise facility position.',
     coordUnavailable: 'unavailable',
     copy: 'Copy',
     copied: 'Copied',
@@ -233,6 +310,30 @@ const I18N = {
     measureEndHint: 'Set measurement target point',
     measureAgainHint: 'Measurement saved - set next start point',
     measurement: 'Measurement',
+    eventsTitle: 'OSINT indicators',
+    eventsSource: 'NASA FIRMS Active Fire',
+    eventsButtonLoad: 'Load hotspots',
+    eventsButtonClear: 'Clear layer',
+    eventsButtonHide: 'Hide',
+    eventsButtonShow: 'Show',
+    eventsKeyLabel: 'NASA FIRMS Map Key',
+    eventsKeyPlaceholder: 'Paste free FIRMS Map Key',
+    eventsDaysLabel: 'Time range',
+    eventsDayOption: d => d + (d===1?' day':' days'),
+    eventsAreaLabel: 'Area',
+    eventsAreaWestRussia: 'Western / southern Russia',
+    eventsHint: 'FIRMS shows fire/heat sources. These are indicators, not confirmed attacks.',
+    eventsNoKey: 'Please enter a free NASA FIRMS Map Key.',
+    eventsLoading: 'Loading FIRMS hotspots ...',
+    eventsLoaded: n => n + ' hotspots loaded',
+    eventsEmpty: 'No hotspots found in the selected period.',
+    eventsError: 'FIRMS hotspots could not be loaded.',
+    eventHotspot: 'FIRMS hotspot',
+    eventConfidence: 'Confidence',
+    eventFrp: 'FRP',
+    eventUtc: 'UTC',
+    eventSatellite: 'Satellite',
+    eventDisclaimer: 'Indicator, not a confirmed attack',
     shareCopied: 'Share link saved in URL and copied',
     shareReady: 'Share link saved in URL',
     empty: 'Nothing placed yet.<br>Choose a system above and tap "Add".',
@@ -241,6 +342,7 @@ const I18N = {
     footerDeepState: 'Front data: cyterat/deepstate-map-data (GPL-3.0), derived from DeepStateMap.live.',
     footerTool: 'Tool by Lukas Knorr',
     cruiseMissile: 'Cruise missile',
+    drone: 'Drone',
     operatorLabel: 'User',
     maxRangeLabel: 'Max range',
     labelToggleTitle: 'Toggle system labels',
@@ -264,6 +366,9 @@ const I18N = {
       'Marschflugkörper / NATO': 'Cruise missiles / NATO',
       'Marschflugkörper / Ukraine': 'Cruise missiles / Ukraine',
       'Marschflugkörper / Russland': 'Cruise missiles / Russia',
+      'Drohnen / NATO': 'Drones / NATO',
+      'Drohnen / Ukraine': 'Drones / Ukraine',
+      'Drohnen / Russland': 'Drones / Russia',
       'Eigene Systeme': 'Custom Systems'
     },
     operatorMap: {
@@ -291,21 +396,62 @@ let baseTileLayer=L.tileLayer(TILE_LAYERS[currentTheme],{
   subdomains:'abcd', maxZoom:20, attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attributions">CARTO</a>'
 }).addTo(map);
 
-// ----- Ukraine-Fläche (lokale Ländergrenze, unter Frontdaten und Markern) -----
+map.createPane('countryAreaPane');
+map.getPane('countryAreaPane').style.zIndex=210;
+map.getPane('countryAreaPane').style.pointerEvents='none';
+map.createPane('ukraineAreaPane');
+map.getPane('ukraineAreaPane').style.zIndex=215;
+map.getPane('ukraineAreaPane').style.pointerEvents='none';
+map.createPane('countryBorderPane');
+map.getPane('countryBorderPane').style.zIndex=220;
+map.getPane('countryBorderPane').style.pointerEvents='none';
+
+// ----- Länderflächen (lokale Ländergrenzen, unter Frontdaten und Markern) -----
+let russiaAreaLayer=null;
+async function loadRussiaArea(){
+  try{
+    const r=await fetch('assets/russia.geojson',{cache:'force-cache'});
+    if(!r.ok) return;
+    const gj=await r.json();
+    russiaAreaLayer=L.geoJSON(gj,{pane:'countryAreaPane',style:{color:'#f87171',weight:1,opacity:.38,fillColor:'#ef4444',fillOpacity:.075,interactive:false}}).addTo(map);
+  }catch(e){}
+}
 let ukraineAreaLayer=null;
 async function loadUkraineArea(){
   try{
     const r=await fetch('assets/ukraine.geojson',{cache:'force-cache'});
     if(!r.ok) return;
     const gj=await r.json();
-    ukraineAreaLayer=L.geoJSON(gj,{style:{color:'#38bdf8',weight:1.1,opacity:.75,fillColor:'#7dd3fc',fillOpacity:.24,interactive:false}}).addTo(map);
-    ukraineAreaLayer.bringToBack();
+    ukraineAreaLayer=L.geoJSON(gj,{pane:'ukraineAreaPane',style:{color:'#38bdf8',weight:1.1,opacity:.75,fillColor:'#7dd3fc',fillOpacity:.24,interactive:false}}).addTo(map);
   }catch(e){}
 }
+loadRussiaArea();
 loadUkraineArea();
 
+// ----- Deutlichere Ländergrenzen ähnlich DeepStateMap -----
+let countryBorderLayer=null;
+function countryBorderStyle(){
+  return {
+    pane:'countryBorderPane',
+    color:currentTheme==='light'?'#475569':'#e5edf6',
+    weight:currentTheme==='light'?1.8:1.65,
+    opacity:currentTheme==='light'?.72:.68,
+    fill:false,
+    interactive:false
+  };
+}
+async function loadCountryBorders(){
+  try{
+    const r=await fetch('assets/countries.geojson',{cache:'force-cache'});
+    if(!r.ok) return;
+    const gj=await r.json();
+    countryBorderLayer=L.geoJSON(gj,{pane:'countryBorderPane',style:countryBorderStyle,interactive:false}).addTo(map);
+  }catch(e){}
+}
+loadCountryBorders();
+
 // ----- Europa Bundesland-/Regionsgrenzen (lokal eingebettet) -----
-const adm1Layer = L.geoJSON(EUROPE_ADMIN1,{style:{color:'#6b7a8d',weight:0.7,opacity:0.65,dashArray:'3,3',interactive:false}});
+const adm1Layer = L.geoJSON(EUROPE_ADMIN1,{style:{color:'#6b7a8d',weight:0.85,opacity:0.58,dashArray:'4,4',interactive:false}});
 adm1Layer.addTo(map);
 
 // ----- Front / besetztes Gebiet (live aus offener Quelle) -----
@@ -372,6 +518,24 @@ function operatorKey(sys){
 function operatorLabel(sys){
   const key=operatorKey(sys);
   return (I18N[currentLang].operatorMap&&I18N[currentLang].operatorMap[key])||key;
+}
+function classKeyForSys(sys){return sys.classKey||'artillery';}
+function systemIcon(sys,color){
+  const cls=classKeyForSys(sys);
+  return L.divIcon({
+    className:'',
+    html:'<div class="sys-dot sys-dot-'+cls+'" style="--sys-color:'+color+';background:'+color+';color:'+color+'"></div>',
+    iconSize:[16,16],
+    iconAnchor:[8,8]
+  });
+}
+function rangeStyle(inst){
+  const cls=systemTypeKey(inst);
+  const base={color:inst.color,fillColor:inst.color};
+  if(!inst.visible) return Object.assign(base,{opacity:0,fillOpacity:0});
+  if(cls==='cruise') return Object.assign(base,{weight:2.2,opacity:.9,fillOpacity:.055,dashArray:'10,8'});
+  if(cls==='drone') return Object.assign(base,{weight:2,opacity:.95,fillOpacity:.045,dashArray:'2,7'});
+  return Object.assign(base,{weight:1.5,opacity:.9,fillOpacity:.10,dashArray:null});
 }
 function labelHtml(inst){
   return '<div class="range-label-inner '+(labelMode==='full'?'full':'compact')+'" style="--label-color:'+inst.color+'">'+
@@ -473,6 +637,7 @@ function applyTheme(theme){
   localStorage.setItem('arm_theme',currentTheme);
   document.body.dataset.theme=currentTheme;
   if(baseTileLayer) baseTileLayer.setUrl(TILE_LAYERS[currentTheme]);
+  if(countryBorderLayer) countryBorderLayer.setStyle(countryBorderStyle);
   updateThemeToggle();
   placed.forEach(updateLabel);
   scheduleLabelLayout();
@@ -519,6 +684,8 @@ function applyLanguage(lang){
   document.querySelectorAll('.section-label')[0].textContent=copy.mapLayers;
   document.querySelector('#frontToggle + span').textContent=copy.occupiedFront;
   document.querySelector('#adm1Toggle + span').textContent=copy.regions;
+  document.querySelector('#capitalToggle + span').textContent=copy.capitalsLayer;
+  document.querySelector('#infraToggle + span').textContent=copy.infrastructureLayer;
   $('#refreshBtn').textContent=copy.refreshFront;
   $('#frontStatus').textContent=copy.loadingFront;
   document.querySelectorAll('.section-label')[1].textContent=copy.addSystem;
@@ -527,6 +694,10 @@ function applyLanguage(lang){
   document.querySelectorAll('.section-label')[2].textContent=copy.ownSystem;
   $('#nsName').placeholder=copy.customName;
   $('#nsCal').placeholder=copy.customCal;
+  $('#nsClass').title=copy.customClass;
+  $('#nsClass option[value="artillery"]').textContent=copy.artillery;
+  $('#nsClass option[value="cruiseMissile"]').textContent=copy.cruiseMissiles;
+  $('#nsClass option[value="drone"]').textContent=copy.drones;
   $('#builder label').textContent=copy.ammoAndRange;
   $('#addAmmoBtn').textContent=copy.addAmmo;
   $('#saveSysBtn').textContent=copy.save;
@@ -535,6 +706,7 @@ function applyLanguage(lang){
   $('#terrainBtn').textContent=copy.terrain;
   $('#coordsBtn').textContent=copy.coordinates;
   $('#measureBtn').textContent=copy.measure;
+  $('#eventsBtn').textContent=copy.events;
   $('#shareBtn').textContent=copy.share;
   $('#systemDrawerTitle').textContent=copy.placed;
   updateSystemDrawerToggle();
@@ -544,6 +716,8 @@ function applyLanguage(lang){
   $('#footerNote div:last-child').textContent=copy.footerTool;
   placed.forEach(updateInst);
   if(window.ArtilleryTerrain&&window.ArtilleryTerrain.renderList) window.ArtilleryTerrain.renderList();
+  if(window.ArtilleryEvents&&window.ArtilleryEvents.renderList) window.ArtilleryEvents.renderList();
+  if(window.ArtilleryPlaces&&window.ArtilleryPlaces.refresh) window.ArtilleryPlaces.refresh();
   if(window.ArtilleryMeasurement&&window.ArtilleryMeasurement.renderList) window.ArtilleryMeasurement.renderList();
   scheduleLabelLayout();
 }
@@ -553,7 +727,12 @@ function fillCatalog(){
   const sel=$('#catalogSelect'); sel.innerHTML='';
   const groups={};
   allSystems().forEach(s=>{const g=getGroupLabel(s.group||'Eigene Systeme');(groups[g]=groups[g]||[]).push(s);});
-  const order=['NATO / Westen','Russland','Ukraine','Marschflugkörper / NATO','Marschflugkörper / Ukraine','Marschflugkörper / Russland','Eigene Systeme'];
+  const order=[
+    'NATO / Westen','Russland','Ukraine',
+    'Marschflugkörper / NATO','Marschflugkörper / Ukraine','Marschflugkörper / Russland',
+    'Drohnen / NATO','Drohnen / Ukraine','Drohnen / Russland',
+    'Eigene Systeme'
+  ];
   const translatedOrder=order.map(g=>getGroupLabel(g));
   const keys=[...translatedOrder.filter(k=>groups[k]),...Object.keys(groups).filter(k=>!translatedOrder.includes(k))];
   keys.forEach(g=>{const og=document.createElement('optgroup');og.label=g;
@@ -566,8 +745,7 @@ function placeSystem(key,opts){
   const c=opts.lat!=null&&opts.lng!=null?L.latLng(opts.lat,opts.lng):map.getCenter();
   const color=opts.color||PALETTE[colorIdx++ % PALETTE.length];
   const id=opts.id||nextId++;
-  const icon=L.divIcon({className:'',html:'<div class="sys-dot" style="background:'+color+';color:'+color+'"></div>',iconSize:[14,14],iconAnchor:[7,7]});
-  const marker=L.marker(c,{icon,draggable:true}).addTo(map);
+  const marker=L.marker(c,{icon:systemIcon(sys,color),draggable:true}).addTo(map);
   const circle=L.circle(c,{radius:sys.ammo[0].range*1000,color,weight:1.5,opacity:.9,fillColor:color,fillOpacity:.10}).addTo(map);
   const inst={id,key,sys,ammoIdx:opts.ammoIdx||0,custom:!!opts.custom,customRange:opts.customRange||sys.ammo[0].range,color,marker,circle,lat:c.lat,lng:c.lng,visible:opts.visible!==false,labelMarker:null,labelPos:opts.labelPos||'right',title:opts.title||'',description:opts.description||''};
   placed.push(inst);
@@ -582,7 +760,7 @@ function currentAmmoName(i){return i.custom?t('customAmmo'):i.sys.ammo[i.ammoIdx
 function updateInst(i){
   const r=currentRange(i);
   i.circle.setRadius(r*1000);
-  i.circle.setStyle({opacity:i.visible?.9:0,fillOpacity:i.visible?.10:0});
+  i.circle.setStyle(rangeStyle(i));
   i.marker.setOpacity(i.visible?1:.25);
   const classLine=i.sys.classKey?t(i.sys.classKey)+'<br>':'';
   const titleLine=i.title?'<b>'+esc(i.title)+'</b><br>':'<b>'+displayName(i.sys)+'</b><br>';
@@ -592,15 +770,24 @@ function updateInst(i){
   scheduleLabelLayout();
 }
 function removeInst(id){const k=placed.findIndex(p=>p.id===id);if(k<0)return;map.removeLayer(placed[k].marker);map.removeLayer(placed[k].circle);if(placed[k].labelMarker)map.removeLayer(placed[k].labelMarker);placed.splice(k,1);renderList();scheduleLabelLayout();}
-function systemTypeKey(inst){return inst.sys.classKey==='cruiseMissile'?'cruise':'artillery';}
-function systemTypeLabel(key){return key==='cruise'?t('cruiseMissiles'):t('artillery');}
+function systemTypeKey(inst){
+  const cls=classKeyForSys(inst.sys);
+  if(cls==='cruiseMissile') return 'cruise';
+  if(cls==='drone') return 'drone';
+  return 'artillery';
+}
+function systemTypeLabel(key){
+  if(key==='cruise') return t('cruiseMissiles');
+  if(key==='drone') return t('drones');
+  return t('artillery');
+}
 function createSystemCard(inst){
     const card=document.createElement('div'); card.className='card';
     const r=currentRange(inst);
     let opts=inst.sys.ammo.map((a,idx)=>'<option value="'+idx+'" '+((!inst.custom&&idx===inst.ammoIdx)?'selected':'')+'>'+a.name+' - '+a.range+' km</option>').join('');
     opts+='<option value="custom" '+(inst.custom?'selected':'')+'>'+t('customAmmo')+'</option>';
     card.innerHTML=
-      '<div class="card-top"><div class="dot" style="background:'+inst.color+';color:'+inst.color+'"></div>'+
+      '<div class="card-top"><div class="dot dot-'+systemTypeKey(inst)+'" style="--sys-color:'+inst.color+';background:'+inst.color+';color:'+inst.color+'"></div>'+
       '<div><div class="card-name">'+displayName(inst.sys)+'</div><div class="card-cal">'+(inst.sys.cal||'')+'</div></div>'+
       '<div class="card-actions">'+
       '<button class="iconbtn" data-act="vis">'+(inst.visible?t('hide'):t('vis'))+'</button>'+
@@ -625,10 +812,11 @@ function renderList(){
   const list=$('#list'); list.innerHTML='';
   if(!placed.length){list.innerHTML='<div class="empty">'+t('empty')+'</div>';return;}
   const operatorOrder=['nato','russia','ukraine','custom'];
+  const typeOrder=['artillery','cruise','drone'];
   const sorted=[...placed].sort((a,b)=>{
     const opDiff=operatorOrder.indexOf(operatorKey(a.sys))-operatorOrder.indexOf(operatorKey(b.sys));
     if(opDiff) return opDiff;
-    const typeDiff=(systemTypeKey(a)==='artillery'?0:1)-(systemTypeKey(b)==='artillery'?0:1);
+    const typeDiff=typeOrder.indexOf(systemTypeKey(a))-typeOrder.indexOf(systemTypeKey(b));
     if(typeDiff) return typeDiff;
     return displayName(a.sys).localeCompare(displayName(b.sys),currentLang);
   });
@@ -638,7 +826,7 @@ function renderList(){
     const group=document.createElement('div');
     group.className='system-group';
     group.innerHTML='<div class="system-group-title">'+esc((I18N[currentLang].operatorMap&&I18N[currentLang].operatorMap[op])||op)+'</div>';
-    ['artillery','cruise'].forEach(type=>{
+    typeOrder.forEach(type=>{
       const typeItems=opItems.filter(inst=>systemTypeKey(inst)===type);
       if(!typeItems.length) return;
       const title=document.createElement('div');
@@ -653,7 +841,7 @@ function renderList(){
 function addAmmoRow(name,range){name=name||'';range=range||'';const row=document.createElement('div');row.className='ammo-row';
   row.innerHTML='<input class="n" placeholder="'+t('ammo')+'" value="'+name+'"><input class="r" type="number" min="0" placeholder="km" value="'+range+'"><button class="iconbtn rm-ammo">X</button>';
   row.querySelector('.rm-ammo').onclick=()=>row.remove();$('#ammoRows').appendChild(row);}
-function resetBuilder(){$('#nsName').value='';$('#nsCal').value='';$('#ammoRows').innerHTML='';addAmmoRow('Standard-HE','');}
+function resetBuilder(){$('#nsName').value='';$('#nsCal').value='';$('#nsClass').value='artillery';$('#ammoRows').innerHTML='';addAmmoRow('Standard-HE','');}
 $('#newSysBtn').onclick=()=>{const b=$('#builder');b.classList.toggle('show');if(b.classList.contains('show')&&!$('#ammoRows').children.length)resetBuilder();};
 $('#addAmmoBtn').onclick=()=>addAmmoRow();
 $('#cancelSysBtn').onclick=()=>$('#builder').classList.remove('show');
@@ -661,7 +849,8 @@ $('#saveSysBtn').onclick=()=>{
   const name=$('#nsName').value.trim();if(!name){alert('Bitte einen Namen angeben.');return;}
   const ammo=[...document.querySelectorAll('#ammoRows .ammo-row')].map(r=>({name:r.querySelector('.n').value.trim()||'Munition',range:Number(r.querySelector('.r').value)||0})).filter(a=>a.range>0);
   if(!ammo.length){alert('Bitte mindestens eine Munition mit Reichweite > 0.');return;}
-  const sys={key:'custom_'+Date.now(),name,cal:$('#nsCal').value.trim()||'benutzerdefiniert',ammo};
+  const cls=$('#nsClass').value;
+  const sys={key:'custom_'+Date.now(),name,cal:$('#nsCal').value.trim()||'benutzerdefiniert',ammo,classKey:cls==='artillery'?null:cls};
   customSystems.push(sys);fillCatalog();$('#catalogSelect').value=sys.key;$('#builder').classList.remove('show');resetBuilder();
   flashHint(t('setHint')(name));
 };
@@ -724,6 +913,8 @@ function initTools(){
   if(window.ArtilleryTerrain) window.ArtilleryTerrain.init(appApi);
   if(window.ArtilleryCoordinates) window.ArtilleryCoordinates.init(appApi);
   if(window.ArtilleryMeasurement) window.ArtilleryMeasurement.init(appApi);
+  if(window.ArtilleryEvents) window.ArtilleryEvents.init(appApi);
+  if(window.ArtilleryPlaces) window.ArtilleryPlaces.init(appApi);
   if(window.ArtilleryShare) window.ArtilleryShare.init(appApi);
 }
 $('#toggle').onclick=openPanel;$('#closeBtn').onclick=closePanel;

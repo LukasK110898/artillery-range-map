@@ -25,6 +25,9 @@ html,body{margin:0;height:100%;background:var(--bg);color:var(--txt);
 .leaflet-control-attribution a{color:var(--muted)!important}
 .sys-dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--dot-border);
   box-shadow:0 0 0 1px rgba(255,255,255,.25),0 0 10px rgba(0,0,0,.6)}
+.sys-dot-cruiseMissile{width:13px;height:13px;border-radius:3px;transform:rotate(45deg)}
+.sys-dot-drone{width:16px;height:16px;border:0;border-radius:0;background:var(--sys-color)!important;
+  clip-path:polygon(50% 0,100% 100%,0 100%);box-shadow:0 0 0 1px rgba(255,255,255,.28),0 0 10px rgba(0,0,0,.6)}
 .range-label-icon{pointer-events:none}
 .range-label-inner{
   width:calc(126px * var(--label-scale,1));
@@ -137,6 +140,8 @@ option{color:var(--txt)}
 .card{border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px;background:var(--surface)}
 .card-top{display:flex;align-items:center;gap:9px;margin-bottom:9px}
 .dot{width:12px;height:12px;border-radius:50%;flex:none;box-shadow:0 0 8px currentColor}
+.dot-cruise{border-radius:3px;transform:rotate(45deg)}
+.dot-drone{border-radius:0;background:var(--sys-color)!important;clip-path:polygon(50% 0,100% 100%,0 100%)}
 .card-name{font-size:13.5px;font-weight:600;line-height:1.2}
 .card-cal{font-size:10.5px;color:var(--muted);margin-top:1px}
 .card-actions{margin-left:auto;display:flex;gap:4px}
@@ -178,6 +183,37 @@ option{color:var(--txt)}
 .tool-item-main b{font-size:12.5px}
 .tool-item-main span{display:block;color:var(--muted);font-variant-numeric:tabular-nums}
 .tool-actions{display:flex;gap:4px}
+.events-config{margin-top:10px;display:grid;gap:8px}
+.events-config label{display:block;margin:0 0 4px;color:var(--muted2);font-size:9px;font-weight:700;letter-spacing:.7px;text-transform:uppercase}
+.events-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.events-actions{display:flex;gap:8px;margin-top:2px}
+.events-actions .btn{flex:1;padding:8px 10px;font-size:12px}
+.event-swatch{background:#f97316;color:#f97316}
+.event-popup{min-width:190px;line-height:1.45}
+.event-popup b{display:block;margin-bottom:5px}
+.event-disclaimer{margin-top:6px;color:var(--muted2);font-size:10.5px}
+.capital-marker{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--panel-solid);
+  border:2px solid var(--txt);box-shadow:0 8px 18px var(--shadow);font-size:15px;line-height:1}
+.infra-marker{width:22px;height:22px;display:grid;place-items:center;color:#fff;border:2px solid rgba(255,255,255,.72);
+  box-shadow:0 8px 18px var(--shadow);font-size:10px;font-weight:900;line-height:1}
+.infra-marker span{display:block;transform:none}
+.infra-port{background:#0ea5e9;border-radius:5px}
+.infra-refinery{background:#ef4444;border-radius:50%}
+.infra-energy{background:#a855f7;border-radius:4px;transform:rotate(45deg)}
+.infra-energy span{transform:rotate(-45deg)}
+.infra-logistics{background:#22c55e;border-radius:0;clip-path:polygon(50% 0,100% 100%,0 100%)}
+.infra-logistics span{margin-top:5px}
+.infra-industrial{background:#64748b;border-radius:7px}
+.place-popup{min-width:210px;line-height:1.45}
+.place-popup p{margin:7px 0;color:var(--muted)}
+.place-chip{display:inline-flex;margin-top:5px;border-radius:999px;padding:3px 7px;background:var(--surface2);color:var(--txt);
+  font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px}
+.place-chip-port{background:rgba(14,165,233,.18);color:#38bdf8}
+.place-chip-refinery{background:rgba(239,68,68,.18);color:#fca5a5}
+.place-chip-energy{background:rgba(168,85,247,.18);color:#d8b4fe}
+.place-chip-logistics{background:rgba(34,197,94,.18);color:#86efac}
+.place-chip-industrial{background:rgba(100,116,139,.22);color:#cbd5e1}
+.place-note{margin-top:6px;color:var(--muted2);font-size:10.5px}
 .floating-panel{position:absolute;right:12px;bottom:18px;z-index:1000;width:360px;max-width:calc(100vw - 24px);
   border:1px solid var(--line2);border-radius:12px;background:var(--panel);backdrop-filter:blur(12px);
   box-shadow:0 18px 44px var(--shadow);padding:12px;color:var(--txt)}
@@ -213,4 +249,5 @@ option{color:var(--txt)}
   .terrain-stats{grid-template-columns:1fr 1fr 1fr;gap:6px}
   .terrain-stat{padding:7px}
   .terrain-stat b{font-size:13px}
+  .events-row{grid-template-columns:1fr}
 }
