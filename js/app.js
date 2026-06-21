@@ -384,7 +384,7 @@ const I18N = {
 let currentLang = localStorage.getItem('arm_lang') || 'de';
 let currentTheme = localStorage.getItem('arm_theme') === 'light' ? 'light' : 'dark';
 document.body.dataset.theme = currentTheme;
-const ASSET_VERSION='3cc81c3';
+const ASSET_VERSION='20260621-2';
 function assetUrl(path){return path+'?v='+ASSET_VERSION;}
 
 // ====== Karte mit detailliertem Basemap (Städte, Straßen, Grenzen) ======

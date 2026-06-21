@@ -121,6 +121,22 @@
     }
     renderList();
   }
+  function syncButton(){
+    if(!btn) return;
+    btn.classList.toggle('active',expanded);
+    btn.setAttribute('aria-expanded',expanded?'true':'false');
+  }
+  function scrollToPanel(){
+    if(!listEl) return;
+    setTimeout(()=>listEl.scrollIntoView({block:'nearest',behavior:'smooth'}),20);
+  }
+  function openEvents(){
+    expanded=true;
+    renderList();
+    syncButton();
+    if(app.openPanel) app.openPanel();
+    scrollToPanel();
+  }
   function renderConfig(){
     const days=getDays();
     const options=[1,2,3,4,5].map(d=>'<option value="'+d+'"'+(d===days?' selected':'')+'>'+esc(tf('eventsDayOption',d))+'</option>').join('');
@@ -146,7 +162,12 @@
       '<div class="tool-item-main"><b>'+esc(t('eventsTitle'))+'</b><span>'+esc(status||t('eventsHint'))+'</span></div>'+
       '<div class="tool-actions"><button class="iconbtn" data-act="toggle">'+(expanded?'-':'+')+'</button></div>'+
       '</div>'+(expanded?renderConfig():'');
-    row.querySelector('[data-act="toggle"]').onclick=()=>{expanded=!expanded;renderList();};
+    row.querySelector('[data-act="toggle"]').onclick=()=>{
+      expanded=!expanded;
+      renderList();
+      syncButton();
+      if(expanded) scrollToPanel();
+    };
     listEl.appendChild(row);
     if(!expanded) return;
     const keyInput=row.querySelector('#eventsKeyInput');
@@ -175,13 +196,11 @@
   function init(api){
     app=api;map=api.map;Lref=window.L;btn=document.querySelector('#eventsBtn');listEl=document.querySelector('#eventsList');
     layer=Lref.layerGroup();
-    btn.onclick=()=>{
-      expanded=!expanded;
-      btn.classList.toggle('active',expanded);
-      renderList();
-      if(app.openPanel) app.openPanel();
-    };
+    btn.setAttribute('aria-controls','eventsList');
+    btn.setAttribute('aria-expanded','false');
+    btn.onclick=openEvents;
     renderList();
+    syncButton();
   }
 
   window.ArtilleryEvents={init,renderList,clear:clearLayer};
