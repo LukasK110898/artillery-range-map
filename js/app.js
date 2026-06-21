@@ -64,6 +64,8 @@ const CATALOG = [
   // ---------- Marschflugkörper / Ukraine ----------
   { key:'neptune', group:'Marschflugkörper / Ukraine', classKey:'cruiseMissile', name:'R-360 Neptune', cal:'Ukrainischer Marschflugkörper', ammo:[
       {name:'R-360 Neptune', range:280},{name:'Long Neptune', range:1000} ]},
+  { key:'flamingo', group:'Marschflugkörper / Ukraine', classKey:'cruiseMissile', name:'FP-5 Flamingo', cal:'Bodengestützter Marschflugkörper', ammo:[
+      {name:'Öffentlicher Referenzwert', range:3000} ]},
   { key:'palianytsia', group:'Marschflugkörper / Ukraine', classKey:'cruiseMissile', name:'Palianytsia', cal:'Ukrainischer Raketen-/Marschflugkörper-ähnlicher Flugkörper', ammo:[
       {name:'Öffentlicher Referenzwert', range:650} ]},
   { key:'peklo', group:'Marschflugkörper / Ukraine', classKey:'cruiseMissile', name:'Peklo', cal:'Ukrainischer Raketen-/Drohnenflugkörper', ammo:[
@@ -97,6 +99,41 @@ const I18N = {
     save: 'Speichern',
     cancel: 'Abbrechen',
     placed: 'Platzierte Systeme',
+    artillery: 'Artillerie',
+    cruiseMissiles: 'Marschflugkoerper',
+    drawerCollapse: 'Platzierte Systeme einklappen',
+    drawerExpand: 'Platzierte Systeme ausklappen',
+    tools: 'Werkzeuge',
+    terrain: 'Terrain',
+    coordinates: 'Koordinaten',
+    measure: 'Messen',
+    share: 'Share',
+    noteTitle: 'Titel',
+    noteDescription: 'Beschreibung',
+    noteTitlePlaceholder: 'Marker-Titel',
+    noteDescriptionPlaceholder: 'Notiz / Beschreibung',
+    terrainStartHint: 'Startpunkt fuer Hoehenprofil setzen',
+    terrainEndHint: 'Zielpunkt fuer Hoehenprofil setzen',
+    terrainReadyHint: 'Hoehenprofil wird geladen',
+    terrainLoading: 'Hoehendaten werden geladen ...',
+    terrainError: 'Hoehendaten konnten nicht geladen werden. Bitte spaeter erneut versuchen.',
+    terrainProfile: 'Hoehenprofil',
+    terrainSource: 'Open-Meteo Elevation API',
+    minHeight: 'Min',
+    maxHeight: 'Max',
+    heightDiff: 'Differenz',
+    samples: 'Messpunkte',
+    coordHint: 'Karte anklicken, um Koordinaten anzuzeigen',
+    coordinatesTitle: 'Koordinaten',
+    coordUnavailable: 'nicht verfuegbar',
+    copy: 'Copy',
+    copied: 'Kopiert',
+    measureStartHint: 'Startpunkt fuer Messung setzen',
+    measureEndHint: 'Zielpunkt fuer Messung setzen',
+    measureAgainHint: 'Messung gespeichert - naechsten Startpunkt setzen',
+    measurement: 'Messung',
+    shareCopied: 'Share-Link in URL gespeichert und kopiert',
+    shareReady: 'Share-Link in URL gespeichert',
     empty: 'Noch nichts platziert.<br>Waehle oben ein System und tippe "Setzen".',
     rangeNote: 'Reichweiten sind veroefentlichte, ungefaehre Hersteller-/Referenzangaben (je nach Munition/Ladung/Systemvariante variabel) - ueber "Benutzerdefiniert" anpassbar. ★ markiert qualitativ haeufig berichtete bzw. besonders sichtbare Systeme. Die Front-Ebene zeigt Flaechenkontrolle aus offener OSINT-Quelle, keine praezisen Truppenpositionen.',
     footerBuild: 'Kartenkacheln: OpenStreetMap contributors und CARTO.',
@@ -109,6 +146,9 @@ const I18N = {
     labelModeCompact: 'KURZ',
     labelModeFull: 'DETAIL',
     labelModeOff: 'AUS',
+    themeToggleTitle: 'Helle/Dunkle Darstellung umschalten',
+    themeDark: 'DUNKEL',
+    themeLight: 'HELL',
     vis: 'VIS',
     hide: 'HIDE',
     zoom: 'ZOOM',
@@ -160,6 +200,41 @@ const I18N = {
     save: 'Save',
     cancel: 'Cancel',
     placed: 'Placed systems',
+    artillery: 'Artillery',
+    cruiseMissiles: 'Cruise missiles',
+    drawerCollapse: 'Collapse placed systems',
+    drawerExpand: 'Expand placed systems',
+    tools: 'Tools',
+    terrain: 'Terrain',
+    coordinates: 'Coordinates',
+    measure: 'Measure',
+    share: 'Share',
+    noteTitle: 'Title',
+    noteDescription: 'Description',
+    noteTitlePlaceholder: 'Marker title',
+    noteDescriptionPlaceholder: 'Note / description',
+    terrainStartHint: 'Set the terrain profile start point',
+    terrainEndHint: 'Set the terrain profile target point',
+    terrainReadyHint: 'Loading terrain profile',
+    terrainLoading: 'Loading elevation data ...',
+    terrainError: 'Elevation data could not be loaded. Please try again later.',
+    terrainProfile: 'Terrain profile',
+    terrainSource: 'Open-Meteo Elevation API',
+    minHeight: 'Min',
+    maxHeight: 'Max',
+    heightDiff: 'Diff',
+    samples: 'samples',
+    coordHint: 'Click the map to show coordinates',
+    coordinatesTitle: 'Coordinates',
+    coordUnavailable: 'unavailable',
+    copy: 'Copy',
+    copied: 'Copied',
+    measureStartHint: 'Set measurement start point',
+    measureEndHint: 'Set measurement target point',
+    measureAgainHint: 'Measurement saved - set next start point',
+    measurement: 'Measurement',
+    shareCopied: 'Share link saved in URL and copied',
+    shareReady: 'Share link saved in URL',
     empty: 'Nothing placed yet.<br>Choose a system above and tap "Add".',
     rangeNote: 'Ranges are published, approximate manufacturer/reference values (varying by ammunition/charge/system variant) - adjustable via "Custom". ★ marks qualitative high-use or high-visibility systems. The front layer shows area control from an open OSINT source, not precise troop positions.',
     footerBuild: 'Map tiles: OpenStreetMap contributors and CARTO.',
@@ -172,6 +247,9 @@ const I18N = {
     labelModeCompact: 'LABEL',
     labelModeFull: 'DETAIL',
     labelModeOff: 'OFF',
+    themeToggleTitle: 'Toggle light/dark display',
+    themeDark: 'DARK',
+    themeLight: 'LIGHT',
     vis: 'VIS',
     hide: 'HIDE',
     zoom: 'ZOOM',
@@ -199,10 +277,16 @@ const I18N = {
   }
 };
 let currentLang = localStorage.getItem('arm_lang') || 'de';
+let currentTheme = localStorage.getItem('arm_theme') === 'light' ? 'light' : 'dark';
+document.body.dataset.theme = currentTheme;
 
-// ====== Karte mit detailliertem dunklem Basemap (Städte, Straßen, Grenzen) ======
+// ====== Karte mit detailliertem Basemap (Städte, Straßen, Grenzen) ======
 const map = L.map('map',{zoomControl:true,worldCopyJump:true,minZoom:3,maxZoom:18}).setView([48.4,33],6);
-L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
+const TILE_LAYERS={
+  dark:'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+  light:'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png'
+};
+let baseTileLayer=L.tileLayer(TILE_LAYERS[currentTheme],{
   subdomains:'abcd', maxZoom:20, attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attributions">CARTO</a>'
 }).addTo(map);
 
@@ -242,10 +326,21 @@ async function refreshFront(){
 let placed=[], nextId=1, colorIdx=0, customSystems=[];
 const $=s=>document.querySelector(s);
 const panel=$('#panel');
+const systemDrawer=$('#systemDrawer');
+let systemDrawerOpen=localStorage.getItem('arm_system_drawer') !== 'closed';
+const toolRegistry={};
+let activeTool=null;
 let labelLayoutRaf=null;
 const LABEL_MODES=['compact','full','off'];
 let labelMode=LABEL_MODES.includes(localStorage.getItem('arm_label_mode'))?localStorage.getItem('arm_label_mode'):'compact';
 function t(key){return (I18N[currentLang] && I18N[currentLang][key]) || I18N.de[key] || key;}
+function registerTool(name,tool){toolRegistry[name]=tool;}
+function setActiveTool(name){
+  if(activeTool&&toolRegistry[activeTool]) toolRegistry[activeTool].deactivate();
+  activeTool=name||null;
+  if(activeTool&&toolRegistry[activeTool]) toolRegistry[activeTool].activate();
+}
+function toggleTool(name){setActiveTool(activeTool===name?null:name);}
 function getGroupLabel(group){return (I18N[currentLang].groupMap && I18N[currentLang].groupMap[group]) || group;}
 function displayName(sys){return (sys.topUsed?'★ ':'')+sys.name;}
 function esc(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
@@ -350,6 +445,38 @@ function updateLabelToggle(){
   btn.setAttribute('aria-label',t('labelToggleTitle'));
   btn.classList.toggle('active',labelMode!=='off');
 }
+function themeModeText(){return currentTheme==='light'?t('themeLight'):t('themeDark');}
+function updateThemeToggle(){
+  const btn=$('#themeToggle');
+  btn.textContent=themeModeText();
+  btn.title=t('themeToggleTitle');
+  btn.setAttribute('aria-label',t('themeToggleTitle'));
+  btn.setAttribute('aria-pressed',currentTheme==='light'?'true':'false');
+  btn.classList.toggle('active',currentTheme==='light');
+}
+function applyTheme(theme){
+  currentTheme=theme==='light'?'light':'dark';
+  localStorage.setItem('arm_theme',currentTheme);
+  document.body.dataset.theme=currentTheme;
+  if(baseTileLayer) baseTileLayer.setUrl(TILE_LAYERS[currentTheme]);
+  updateThemeToggle();
+  placed.forEach(updateLabel);
+  scheduleLabelLayout();
+}
+function cycleTheme(){applyTheme(currentTheme==='light'?'dark':'light');}
+function updateSystemDrawerToggle(){
+  systemDrawer.classList.toggle('open',systemDrawerOpen);
+  const btn=$('#systemDrawerToggle');
+  btn.textContent=systemDrawerOpen?'>':'<';
+  btn.title=systemDrawerOpen?t('drawerCollapse'):t('drawerExpand');
+  btn.setAttribute('aria-label',btn.title);
+  btn.setAttribute('aria-expanded',systemDrawerOpen?'true':'false');
+}
+function toggleSystemDrawer(){
+  systemDrawerOpen=!systemDrawerOpen;
+  localStorage.setItem('arm_system_drawer',systemDrawerOpen?'open':'closed');
+  updateSystemDrawerToggle();
+}
 function cycleLabelMode(){
   const idx=LABEL_MODES.indexOf(labelMode);
   labelMode=LABEL_MODES[(idx+1)%LABEL_MODES.length];
@@ -372,6 +499,7 @@ function applyLanguage(lang){
     btn.setAttribute('aria-pressed',active?'true':'false');
   });
   updateLabelToggle();
+  updateThemeToggle();
   $('#panel .ph h1').textContent=copy.panelTitle;
   $('#panel .ph .sub').textContent=copy.panelSub;
   document.querySelectorAll('.section-label')[0].textContent=copy.mapLayers;
@@ -389,12 +517,19 @@ function applyLanguage(lang){
   $('#addAmmoBtn').textContent=copy.addAmmo;
   $('#saveSysBtn').textContent=copy.save;
   $('#cancelSysBtn').textContent=copy.cancel;
-  document.querySelectorAll('.section-label')[3].textContent=copy.placed;
+  $('#toolsSectionLabel').textContent=copy.tools;
+  $('#terrainBtn').textContent=copy.terrain;
+  $('#coordsBtn').textContent=copy.coordinates;
+  $('#measureBtn').textContent=copy.measure;
+  $('#shareBtn').textContent=copy.share;
+  $('#systemDrawerTitle').textContent=copy.placed;
+  updateSystemDrawerToggle();
   $('#rangeNote').textContent=copy.rangeNote;
   $('#implementationNote').textContent=copy.footerBuild;
   $('#deepstateLicenseNote').textContent=copy.footerDeepState;
   $('#footerNote div:last-child').textContent=copy.footerTool;
   placed.forEach(updateInst);
+  if(window.ArtilleryMeasurement&&window.ArtilleryMeasurement.renderList) window.ArtilleryMeasurement.renderList();
   scheduleLabelLayout();
 }
 function allSystems(){return [...CATALOG,...customSystems];}
@@ -410,20 +545,22 @@ function fillCatalog(){
     groups[g].forEach(s=>{const o=document.createElement('option');o.value=s.key;o.textContent=displayName(s);og.appendChild(o);});
     sel.appendChild(og);});
 }
-function placeSystem(key){
+function placeSystem(key,opts){
+  opts=opts||{};
   const sys=findSys(key); if(!sys) return;
-  const c=map.getCenter();
-  const color=PALETTE[colorIdx++ % PALETTE.length];
-  const id=nextId++;
+  const c=opts.lat!=null&&opts.lng!=null?L.latLng(opts.lat,opts.lng):map.getCenter();
+  const color=opts.color||PALETTE[colorIdx++ % PALETTE.length];
+  const id=opts.id||nextId++;
   const icon=L.divIcon({className:'',html:'<div class="sys-dot" style="background:'+color+';color:'+color+'"></div>',iconSize:[14,14],iconAnchor:[7,7]});
   const marker=L.marker(c,{icon,draggable:true}).addTo(map);
   const circle=L.circle(c,{radius:sys.ammo[0].range*1000,color,weight:1.5,opacity:.9,fillColor:color,fillOpacity:.10}).addTo(map);
-  const inst={id,key,sys,ammoIdx:0,custom:false,customRange:sys.ammo[0].range,color,marker,circle,lat:c.lat,lng:c.lng,visible:true,labelMarker:null,labelPos:'right'};
+  const inst={id,key,sys,ammoIdx:opts.ammoIdx||0,custom:!!opts.custom,customRange:opts.customRange||sys.ammo[0].range,color,marker,circle,lat:c.lat,lng:c.lng,visible:opts.visible!==false,labelMarker:null,labelPos:opts.labelPos||'right',title:opts.title||'',description:opts.description||''};
   placed.push(inst);
   marker.on('drag',e=>{const p=e.target.getLatLng();circle.setLatLng(p);inst.lat=p.lat;inst.lng=p.lng;if(inst.labelMarker)inst.labelMarker.setLatLng(p);scheduleLabelLayout();});
   marker.on('click',()=>marker.openPopup());
   updateInst(inst); renderList();
-  flashHint(t('placeHint')(sys.name));
+  if(!opts.silent) flashHint(t('placeHint')(sys.name));
+  return inst;
 }
 function currentRange(i){return i.custom?(Number(i.customRange)||0):i.sys.ammo[i.ammoIdx].range;}
 function currentAmmoName(i){return i.custom?t('customAmmo'):i.sys.ammo[i.ammoIdx].name;}
@@ -433,15 +570,16 @@ function updateInst(i){
   i.circle.setStyle({opacity:i.visible?.9:0,fillOpacity:i.visible?.10:0});
   i.marker.setOpacity(i.visible?1:.25);
   const classLine=i.sys.classKey?t(i.sys.classKey)+'<br>':'';
-  i.marker.bindPopup('<b>'+displayName(i.sys)+'</b><br>'+classLine+currentAmmoName(i)+'<br>'+t('rangeLabel')+': <b>'+r+' km</b>');
+  const titleLine=i.title?'<b>'+esc(i.title)+'</b><br>':'<b>'+displayName(i.sys)+'</b><br>';
+  const descLine=i.description?'<div style="margin:5px 0;color:var(--muted)">'+esc(i.description)+'</div>':'';
+  i.marker.bindPopup(titleLine+classLine+currentAmmoName(i)+'<br>'+t('rangeLabel')+': <b>'+r+' km</b>'+descLine);
   updateLabel(i);
   scheduleLabelLayout();
 }
 function removeInst(id){const k=placed.findIndex(p=>p.id===id);if(k<0)return;map.removeLayer(placed[k].marker);map.removeLayer(placed[k].circle);if(placed[k].labelMarker)map.removeLayer(placed[k].labelMarker);placed.splice(k,1);renderList();scheduleLabelLayout();}
-function renderList(){
-  const list=$('#list'); list.innerHTML='';
-  if(!placed.length){list.innerHTML='<div class="empty">'+t('empty')+'</div>';return;}
-  placed.forEach(inst=>{
+function systemTypeKey(inst){return inst.sys.classKey==='cruiseMissile'?'cruise':'artillery';}
+function systemTypeLabel(key){return key==='cruise'?t('cruiseMissiles'):t('artillery');}
+function createSystemCard(inst){
     const card=document.createElement('div'); card.className='card';
     const r=currentRange(inst);
     let opts=inst.sys.ammo.map((a,idx)=>'<option value="'+idx+'" '+((!inst.custom&&idx===inst.ammoIdx)?'selected':'')+'>'+a.name+' - '+a.range+' km</option>').join('');
@@ -455,6 +593,8 @@ function renderList(){
       '<button class="iconbtn" data-act="del">'+t('del')+'</button></div></div>'+
       '<label>'+t('ammo')+'</label><select data-act="ammo">'+opts+'</select>'+
       '<div class="custom-range '+(inst.custom?'show':'')+'"><input type="number" min="0" step="1" value="'+inst.customRange+'" data-act="crange"><span style="font-size:12px;color:var(--muted)">km</span></div>'+
+      '<div class="note-fields"><label>'+t('noteTitle')+'</label><input data-act="title" placeholder="'+esc(t('noteTitlePlaceholder'))+'" value="'+esc(inst.title||'')+'">'+
+      '<label>'+t('noteDescription')+'</label><textarea data-act="description" placeholder="'+esc(t('noteDescriptionPlaceholder'))+'">'+esc(inst.description||'')+'</textarea></div>'+
       '<div class="range-pill"><b>'+r+'</b><span>'+t('rangeKm')+'</span></div>';
     card.querySelector('[data-act="del"]').onclick=()=>removeInst(inst.id);
     card.querySelector('[data-act="zoom"]').onclick=()=>{map.setView([inst.lat,inst.lng],8);closePanel();};
@@ -462,7 +602,37 @@ function renderList(){
     card.querySelector('[data-act="ammo"]').onchange=e=>{if(e.target.value==='custom'){inst.custom=true;}else{inst.custom=false;inst.ammoIdx=Number(e.target.value);}updateInst(inst);renderList();};
     const cr=card.querySelector('[data-act="crange"]');
     if(cr)cr.oninput=e=>{inst.customRange=e.target.value;updateInst(inst);card.querySelector('.range-pill b').textContent=currentRange(inst);};
-    list.appendChild(card);
+    card.querySelector('[data-act="title"]').oninput=e=>{inst.title=e.target.value;updateInst(inst);};
+    card.querySelector('[data-act="description"]').oninput=e=>{inst.description=e.target.value;updateInst(inst);};
+    return card;
+}
+function renderList(){
+  const list=$('#list'); list.innerHTML='';
+  if(!placed.length){list.innerHTML='<div class="empty">'+t('empty')+'</div>';return;}
+  const operatorOrder=['nato','russia','ukraine','custom'];
+  const sorted=[...placed].sort((a,b)=>{
+    const opDiff=operatorOrder.indexOf(operatorKey(a.sys))-operatorOrder.indexOf(operatorKey(b.sys));
+    if(opDiff) return opDiff;
+    const typeDiff=(systemTypeKey(a)==='artillery'?0:1)-(systemTypeKey(b)==='artillery'?0:1);
+    if(typeDiff) return typeDiff;
+    return displayName(a.sys).localeCompare(displayName(b.sys),currentLang);
+  });
+  operatorOrder.forEach(op=>{
+    const opItems=sorted.filter(inst=>operatorKey(inst.sys)===op);
+    if(!opItems.length) return;
+    const group=document.createElement('div');
+    group.className='system-group';
+    group.innerHTML='<div class="system-group-title">'+esc((I18N[currentLang].operatorMap&&I18N[currentLang].operatorMap[op])||op)+'</div>';
+    ['artillery','cruise'].forEach(type=>{
+      const typeItems=opItems.filter(inst=>systemTypeKey(inst)===type);
+      if(!typeItems.length) return;
+      const title=document.createElement('div');
+      title.className='system-type-title';
+      title.textContent=systemTypeLabel(type);
+      group.appendChild(title);
+      typeItems.forEach(inst=>group.appendChild(createSystemCard(inst)));
+    });
+    list.appendChild(group);
   });
 }
 function addAmmoRow(name,range){name=name||'';range=range||'';const row=document.createElement('div');row.className='ammo-row';
@@ -482,7 +652,68 @@ $('#saveSysBtn').onclick=()=>{
 };
 function openPanel(){panel.classList.add('open');}
 function closePanel(){panel.classList.remove('open');}
+function exportMapState(){
+  const c=map.getCenter();
+  return {lat:c.lat,lng:c.lng,zoom:map.getZoom(),theme:currentTheme};
+}
+function restoreMapState(state){
+  if(!state) return;
+  if(state.theme) applyTheme(state.theme);
+  map.setView([Number(state.lat)||48.4,Number(state.lng)||33],Number(state.zoom)||6);
+}
+function systemSnapshot(sys){
+  return {key:sys.key,group:sys.group,name:sys.name,cal:sys.cal,ammo:sys.ammo,classKey:sys.classKey,topUsed:sys.topUsed};
+}
+function exportSystemsState(){
+  return placed.map(inst=>({
+    key:inst.key,
+    sys:CATALOG.some(s=>s.key===inst.key)?null:systemSnapshot(inst.sys),
+    ammoIdx:inst.ammoIdx,
+    custom:inst.custom,
+    customRange:inst.customRange,
+    color:inst.color,
+    lat:inst.lat,
+    lng:inst.lng,
+    visible:inst.visible,
+    labelPos:inst.labelPos,
+    title:inst.title||'',
+    description:inst.description||''
+  }));
+}
+function clearSystems(){
+  [...placed].forEach(inst=>removeInst(inst.id));
+}
+function restoreSystemsState(items){
+  clearSystems();
+  customSystems=[];
+  nextId=1;colorIdx=0;
+  (items||[]).forEach(item=>{
+    if(item.sys&&!findSys(item.key)){
+      customSystems.push(Object.assign({group:'Eigene Systeme'},item.sys));
+    }
+  });
+  fillCatalog();
+  (items||[]).forEach(item=>{
+    if(!findSys(item.key)) return;
+    placeSystem(item.key,{
+      lat:item.lat,lng:item.lng,color:item.color,ammoIdx:item.ammoIdx,custom:item.custom,customRange:item.customRange,
+      visible:item.visible,labelPos:item.labelPos,title:item.title,description:item.description,silent:true
+    });
+  });
+  renderList();
+  scheduleLabelLayout();
+}
+const appApi={map,palette:PALETTE,t,esc,flash:flashHint,closePanel,openPanel,registerTool,toggleTool,setActiveTool,
+  exportMapState,restoreMapState,exportSystemsState,restoreSystemsState};
+function initTools(){
+  if(window.ArtilleryTerrain) window.ArtilleryTerrain.init(appApi);
+  if(window.ArtilleryCoordinates) window.ArtilleryCoordinates.init(appApi);
+  if(window.ArtilleryMeasurement) window.ArtilleryMeasurement.init(appApi);
+  if(window.ArtilleryShare) window.ArtilleryShare.init(appApi);
+}
 $('#toggle').onclick=openPanel;$('#closeBtn').onclick=closePanel;
+$('#systemDrawerToggle').onclick=toggleSystemDrawer;
+$('#themeToggle').onclick=cycleTheme;
 $('#addBtn').onclick=()=>placeSystem($('#catalogSelect').value);
 $('#refreshBtn').onclick=()=>refreshFront();
 $('#frontToggle').onchange=e=>{if(e.target.checked){if(occLayer)occLayer.addTo(map);else refreshFront();}else if(occLayer)map.removeLayer(occLayer);};
@@ -494,7 +725,12 @@ let hintT;function flashHint(m){const h=$('#hint');h.textContent=m;h.classList.a
 
 // ====== Start ======
 applyLanguage(currentLang);
+updateSystemDrawerToggle();
 fillCatalog();renderList();
-placeSystem('bohdana');placeSystem('loras');
-openPanel();
+initTools();
+const restoredFromShare=window.ArtilleryShare&&window.ArtilleryShare.hasState&&window.ArtilleryShare.hasState()?window.ArtilleryShare.restore(appApi):false;
+if(!restoredFromShare){
+  placeSystem('bohdana');placeSystem('loras');
+  openPanel();
+}
 refreshFront(); // beim Laden immer die aktuellsten Frontdaten ziehen

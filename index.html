@@ -15,6 +15,7 @@
   <button type="button" data-lang="en">EN</button>
 </div>
 <button class="label-toggle" id="labelToggle" type="button">KURZ</button>
+<button class="theme-toggle" id="themeToggle" type="button">DUNKEL</button>
 <div class="hint" id="hint"></div>
 
 <div id="panel">
@@ -46,8 +47,15 @@
     </div>
 
     <div class="divider"></div>
-    <div class="section-label">Platzierte Systeme</div>
-    <div id="list"></div>
+    <div class="section-label" id="toolsSectionLabel">Werkzeuge</div>
+    <div class="tool-grid">
+      <button class="btn ghost" id="terrainBtn" type="button">Terrain</button>
+      <button class="btn ghost" id="coordsBtn" type="button">Koordinaten</button>
+      <button class="btn ghost" id="measureBtn" type="button">Messen</button>
+      <button class="btn ghost" id="shareBtn" type="button">Share</button>
+    </div>
+    <div id="measurementList" class="tool-list"></div>
+
     <div class="legend-note" id="rangeNote">Reichweiten sind veroefentlichte, ungefaehre Hersteller-/Referenzangaben (je nach Munition/Ladung/Systemvariante variabel) - ueber "Benutzerdefiniert" anpassbar. Die Front-Ebene zeigt Flaechenkontrolle aus offener OSINT-Quelle, keine praezisen Truppenpositionen.</div>
     <div class="footer-note" id="footerNote">
       <div id="implementationNote">Kartenkacheln: OpenStreetMap contributors und CARTO.</div>
@@ -57,8 +65,24 @@
   </div>
 </div>
 
+<div id="systemDrawer" class="system-drawer open">
+  <button id="systemDrawerToggle" class="system-drawer-toggle" type="button" aria-label="Platzierte Systeme einklappen">&gt;</button>
+  <div class="system-drawer-inner">
+    <div class="section-label" id="systemDrawerTitle">Platzierte Systeme</div>
+    <div id="list"></div>
+  </div>
+</div>
+
+<div class="floating-panel" id="terrainPanel" hidden></div>
+
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/proj4@2.12.1/dist/proj4.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mgrs@2.0.0/dist/mgrs.min.js"></script>
 <script src="js/data.js"></script>
+<script src="js/terrain.js"></script>
+<script src="js/coordinates.js"></script>
+<script src="js/measurement.js"></script>
+<script src="js/share.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>
