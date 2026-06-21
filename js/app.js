@@ -384,6 +384,8 @@ const I18N = {
 let currentLang = localStorage.getItem('arm_lang') || 'de';
 let currentTheme = localStorage.getItem('arm_theme') === 'light' ? 'light' : 'dark';
 document.body.dataset.theme = currentTheme;
+const ASSET_VERSION='3cc81c3';
+function assetUrl(path){return path+'?v='+ASSET_VERSION;}
 
 // ====== Karte mit detailliertem Basemap (Städte, Straßen, Grenzen) ======
 const map = L.map('map',{zoomControl:false,worldCopyJump:true,minZoom:3,maxZoom:18}).setView([48.4,33],6);
@@ -410,7 +412,7 @@ map.getPane('countryBorderPane').style.pointerEvents='none';
 let russiaAreaLayer=null;
 async function loadRussiaArea(){
   try{
-    const r=await fetch('assets/russia.geojson',{cache:'force-cache'});
+    const r=await fetch(assetUrl('assets/russia.geojson'),{cache:'force-cache'});
     if(!r.ok) return;
     const gj=await r.json();
     russiaAreaLayer=L.geoJSON(gj,{pane:'countryAreaPane',style:{color:'#f87171',weight:1,opacity:.38,fillColor:'#ef4444',fillOpacity:.075,interactive:false}}).addTo(map);
@@ -419,7 +421,7 @@ async function loadRussiaArea(){
 let ukraineAreaLayer=null;
 async function loadUkraineArea(){
   try{
-    const r=await fetch('assets/ukraine.geojson',{cache:'force-cache'});
+    const r=await fetch(assetUrl('assets/ukraine.geojson'),{cache:'force-cache'});
     if(!r.ok) return;
     const gj=await r.json();
     ukraineAreaLayer=L.geoJSON(gj,{pane:'ukraineAreaPane',style:{color:'#38bdf8',weight:1.1,opacity:.75,fillColor:'#7dd3fc',fillOpacity:.24,interactive:false}}).addTo(map);
@@ -442,7 +444,7 @@ function countryBorderStyle(){
 }
 async function loadCountryBorders(){
   try{
-    const r=await fetch('assets/countries.geojson',{cache:'force-cache'});
+    const r=await fetch(assetUrl('assets/countries.geojson'),{cache:'force-cache'});
     if(!r.ok) return;
     const gj=await r.json();
     countryBorderLayer=L.geoJSON(gj,{pane:'countryBorderPane',style:countryBorderStyle,interactive:false}).addTo(map);
