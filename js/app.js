@@ -291,6 +291,19 @@ let baseTileLayer=L.tileLayer(TILE_LAYERS[currentTheme],{
   subdomains:'abcd', maxZoom:20, attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attributions">CARTO</a>'
 }).addTo(map);
 
+// ----- Ukraine-Fläche (lokale Ländergrenze, unter Frontdaten und Markern) -----
+let ukraineAreaLayer=null;
+async function loadUkraineArea(){
+  try{
+    const r=await fetch('assets/ukraine.geojson',{cache:'force-cache'});
+    if(!r.ok) return;
+    const gj=await r.json();
+    ukraineAreaLayer=L.geoJSON(gj,{style:{color:'#38bdf8',weight:1.1,opacity:.75,fillColor:'#7dd3fc',fillOpacity:.24,interactive:false}}).addTo(map);
+    ukraineAreaLayer.bringToBack();
+  }catch(e){}
+}
+loadUkraineArea();
+
 // ----- Europa Bundesland-/Regionsgrenzen (lokal eingebettet) -----
 const adm1Layer = L.geoJSON(EUROPE_ADMIN1,{style:{color:'#6b7a8d',weight:0.7,opacity:0.65,dashArray:'3,3',interactive:false}});
 adm1Layer.addTo(map);
@@ -530,6 +543,7 @@ function applyLanguage(lang){
   $('#deepstateLicenseNote').textContent=copy.footerDeepState;
   $('#footerNote div:last-child').textContent=copy.footerTool;
   placed.forEach(updateInst);
+  if(window.ArtilleryTerrain&&window.ArtilleryTerrain.renderList) window.ArtilleryTerrain.renderList();
   if(window.ArtilleryMeasurement&&window.ArtilleryMeasurement.renderList) window.ArtilleryMeasurement.renderList();
   scheduleLabelLayout();
 }

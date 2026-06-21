@@ -1,6 +1,6 @@
 (function(){
   const SAMPLE_COUNT=72;
-  let app,map,Lref,btn,panel,active=false,startMarker=null,endMarker=null,line=null,debounceTimer=null,requestId=0;
+  let app,map,Lref,btn,panel,listEl,active=false,startMarker=null,endMarker=null,line=null,debounceTimer=null,requestId=0;
 
   function esc(v){return app&&app.esc?app.esc(v):String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
   function t(key){return app&&app.t?app.t(key):key;}
@@ -17,6 +17,7 @@
     [startMarker,endMarker,line].forEach(layer=>{if(layer) map.removeLayer(layer);});
     startMarker=null;endMarker=null;line=null;
     if(panel) panel.hidden=true;
+    renderList();
   }
   function makeMarker(latlng,color){
     return Lref.marker(latlng,{icon:icon(color),draggable:true,zIndexOffset:540}).addTo(map);
@@ -37,6 +38,26 @@
       out.push(total);
     }
     return out;
+  }
+  function currentDistanceKm(){
+    if(!startMarker||!endMarker) return null;
+    return map.distance(startMarker.getLatLng(),endMarker.getLatLng())/1000;
+  }
+  function renderList(){
+    if(!listEl) return;
+    listEl.innerHTML='';
+    if(!startMarker) return;
+    const km=currentDistanceKm();
+    const status=km==null?t('terrainEndHint'):km.toFixed(km>=100?0:2)+' km · '+t('terrainProfile');
+    const row=document.createElement('div');
+    row.className='tool-item';
+    row.innerHTML='<div class="tool-item-top">'+
+      '<div class="tool-swatch" style="background:#38bdf8;color:#38bdf8"></div>'+
+      '<div class="tool-item-main"><b>'+esc(t('terrainProfile'))+'</b><span>'+esc(status)+'</span></div>'+
+      '<div class="tool-actions"><button class="iconbtn" data-act="del">'+esc(t('del'))+'</button></div>'+
+      '</div>';
+    row.querySelector('[data-act="del"]').onclick=clearTerrain;
+    listEl.appendChild(row);
   }
   async function fetchElevations(points){
     const lat=points.map(p=>p.lat.toFixed(5)).join(',');
@@ -96,6 +117,7 @@
   }
   function scheduleProfile(){
     ensureLine();
+    renderList();
     clearTimeout(debounceTimer);
     debounceTimer=setTimeout(updateProfile,450);
   }
@@ -103,6 +125,7 @@
     if(!startMarker){
       startMarker=makeMarker(e.latlng,'#38bdf8');
       startMarker.on('drag',scheduleProfile);
+      renderList();
       app.flash(t('terrainEndHint'));
       return;
     }
@@ -110,6 +133,7 @@
       endMarker=makeMarker(e.latlng,'#facc15');
       endMarker.on('drag',scheduleProfile);
       ensureLine();
+      renderList();
       updateProfile();
       app.flash(t('terrainReadyHint'));
       return;
@@ -117,6 +141,7 @@
     clearTerrain();
     startMarker=makeMarker(e.latlng,'#38bdf8');
     startMarker.on('drag',scheduleProfile);
+    renderList();
     app.flash(t('terrainEndHint'));
   }
   function activate(){
@@ -132,10 +157,11 @@
     map.off('click',onMapClick);
   }
   function init(api){
-    app=api; map=api.map; Lref=window.L; btn=document.querySelector('#terrainBtn'); panel=document.querySelector('#terrainPanel');
+    app=api; map=api.map; Lref=window.L; btn=document.querySelector('#terrainBtn'); panel=document.querySelector('#terrainPanel'); listEl=document.querySelector('#terrainList');
     app.registerTool('terrain',{activate,deactivate});
     btn.onclick=()=>app.toggleTool('terrain');
+    renderList();
   }
 
-  window.ArtilleryTerrain={init,clear:clearTerrain};
+  window.ArtilleryTerrain={init,clear:clearTerrain,renderList};
 })();
