@@ -384,7 +384,7 @@ const I18N = {
 let currentLang = localStorage.getItem('arm_lang') || 'de';
 let currentTheme = localStorage.getItem('arm_theme') === 'light' ? 'light' : 'dark';
 document.body.dataset.theme = currentTheme;
-const ASSET_VERSION='20260621-2';
+const ASSET_VERSION='20260621-3';
 function assetUrl(path){return path+'?v='+ASSET_VERSION;}
 
 // ====== Karte mit detailliertem Basemap (Städte, Straßen, Grenzen) ======
@@ -438,6 +438,7 @@ function countryBorderStyle(){
     color:currentTheme==='light'?'#475569':'#e5edf6',
     weight:currentTheme==='light'?1.8:1.65,
     opacity:currentTheme==='light'?.72:.68,
+    smoothFactor:.55,
     fill:false,
     interactive:false
   };
